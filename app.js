@@ -1,3 +1,83 @@
+// Secret haunted-carwash mode: Up, Down, Right, then code 987.
+(() => {
+  const sequence = ['ArrowUp', 'ArrowDown', 'ArrowRight'];
+  let progress = 0;
+  let timer = null;
+  let layer = null;
+  let previousFocus = null;
+  const messages = [
+    'We know what is hiding under the mud.',
+    'Something is watching from the back seat.',
+    'The footprints stop inside your car.',
+    'You washed it. It came back.',
+    'Do not look in the rearview mirror.'
+  ];
+
+  function stop() {
+    clearInterval(timer);
+    timer = null;
+    layer?.remove();
+    layer = null;
+    previousFocus?.focus();
+  }
+
+  function start() {
+    if (layer) return;
+    previousFocus = document.activeElement;
+    layer = document.createElement('div');
+    layer.className = 'haunted-layer';
+    const exit = document.createElement('button');
+    exit.className = 'haunted-exit';
+    exit.textContent = 'End spooky mode (Esc)';
+    exit.addEventListener('click', stop);
+    layer.append(exit);
+    document.body.append(layer);
+    exit.focus();
+
+    function popup() {
+      // Keep the prank bounded even if it is left running.
+      if (layer.querySelectorAll('.haunted-popup').length >= 5) {
+        layer.querySelector('.haunted-popup').remove();
+      }
+      const card = document.createElement('section');
+      card.className = 'haunted-popup';
+      card.style.left = `${5 + Math.random() * 55}%`;
+      card.style.top = `${15 + Math.random() * 55}%`;
+      const title = document.createElement('strong');
+      title.textContent = '☠ THE CARWASH IS HAUNTED ☠';
+      const message = document.createElement('p');
+      message.textContent = messages[Math.floor(Math.random() * messages.length)];
+      const close = document.createElement('button');
+      close.textContent = 'Close';
+      close.addEventListener('click', () => card.remove());
+      card.append(title, message, close);
+      layer.append(card);
+    }
+    popup();
+    timer = setInterval(popup, 1800);
+  }
+
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && layer) { stop(); return; }
+    if (event.repeat || event.ctrlKey || event.metaKey || event.altKey ||
+        event.target.closest('input, textarea, select, [contenteditable]')) {
+      progress = 0;
+      return;
+    }
+    if (layer) return;
+    if (event.key === sequence[progress]) {
+      event.preventDefault();
+      progress++;
+    } else {
+      progress = event.key === sequence[0] ? 1 : 0;
+    }
+    if (progress === sequence.length) {
+      progress = 0;
+      if (window.prompt('Enter the secret carwash code:')?.trim() === '987') start();
+    }
+  });
+})();
+
 (() => {
   'use strict';
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
