@@ -5,6 +5,7 @@
   let timer = null;
   let layer = null;
   let previousFocus = null;
+  let codeDialog = null;
   const messages = [
     'We know what is hiding under the mud.',
     'Something is watching from the back seat.',
@@ -57,25 +58,83 @@
     timer = setInterval(popup, 1800);
   }
 
-  document.addEventListener('keydown', (event) => {
+  function askForCode() {
+    if (codeDialog || layer) return;
+    previousFocus = document.activeElement;
+    codeDialog = document.createElement('dialog');
+    codeDialog.className = 'haunted-code';
+    const form = document.createElement('form');
+    const label = document.createElement('label');
+    label.textContent = 'Enter the secret carwash code';
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.inputMode = 'numeric';
+    input.autocomplete = 'off';
+    input.required = true;
+    label.append(input);
+    const error = document.createElement('p');
+    error.setAttribute('role', 'status');
+    const enter = document.createElement('button');
+    enter.type = 'submit';
+    enter.textContent = 'Enter';
+    const cancel = document.createElement('button');
+    cancel.type = 'button';
+    cancel.textContent = 'Cancel';
+    function dismiss() {
+      codeDialog.close();
+      codeDialog.remove();
+      codeDialog = null;
+      previousFocus?.focus();
+    }
+    cancel.addEventListener('click', dismiss);
+    codeDialog.addEventListener('cancel', (event) => {
+      event.preventDefault();
+      dismiss();
+    });
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      if (input.value.trim() === '987') {
+        dismiss();
+        start();
+      } else {
+        error.textContent = 'That code is incorrect. Try again.';
+        input.select();
+      }
+    });
+    form.append(label, error, enter, cancel);
+    codeDialog.append(form);
+    codeDialog.setAttribute('aria-label', 'Secret carwash code');
+    document.body.append(codeDialog);
+    codeDialog.showModal();
+    input.focus();
+  }
+
+  function acceptArrow(key) {
+    if (layer || codeDialog) return;
+    progress = key === sequence[progress] ? progress + 1 : key === sequence[0] ? 1 : 0;
+    if (progress === sequence.length) {
+      progress = 0;
+      askForCode();
+    }
+  }
+
+  document.querySelectorAll('[data-secret-arrow]').forEach((button) => {
+    button.addEventListener('click', () => acceptArrow(button.dataset.secretArrow));
+  });
+
+  window.addEventListener('keydown', (event) => {
     if (event.key === 'Escape' && layer) { stop(); return; }
     if (event.repeat || event.ctrlKey || event.metaKey || event.altKey ||
         event.target.closest('input, textarea, select, [contenteditable]')) {
       progress = 0;
       return;
     }
-    if (layer) return;
-    if (event.key === sequence[progress]) {
-      event.preventDefault();
-      progress++;
-    } else {
-      progress = event.key === sequence[0] ? 1 : 0;
-    }
-    if (progress === sequence.length) {
-      progress = 0;
-      if (window.prompt('Enter the secret carwash code:')?.trim() === '987') start();
-    }
-  });
+    if (layer || codeDialog) return;
+    // Ignore unrelated keys so Tab navigation between arrow buttons also works.
+    if (!event.key.startsWith('Arrow')) return;
+    event.preventDefault();
+    acceptArrow(event.key);
+  }, true);
 })();
 
 (() => {

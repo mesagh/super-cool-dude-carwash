@@ -646,6 +646,14 @@ h2 {
 .book-note.is-ok { color: var(--yellow); font-weight: 700; }
 
 /* Secret haunted-carwash popups */
+.secret-arrows { display: flex; justify-content: center; gap: .5rem; margin-top: .75rem; }
+.secret-arrows button { width: 40px; height: 40px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); color: var(--ink); font-size: 1.25rem; cursor: pointer; }
+.haunted-code { width: min(360px, calc(100vw - 32px)); padding: 24px; border: 2px solid var(--green); border-radius: 12px; background: var(--surface); color: var(--ink); font-family: var(--font-body); }
+.haunted-code::backdrop { background: rgb(0 0 0 / .65); }
+.haunted-code label { display: grid; gap: 12px; font-weight: 800; }
+.haunted-code input { width: 100%; box-sizing: border-box; padding: 12px; border: 1px solid var(--line); border-radius: 6px; font: inherit; background: var(--bg); color: var(--ink); }
+.haunted-code button { margin-right: 8px; padding: 10px 18px; border: 0; border-radius: 6px; background: var(--yellow); color: var(--yellow-ink); cursor: pointer; font: inherit; font-weight: 800; }
+.haunted-code [role="status"] { min-height: 1.5em; }
 .haunted-layer { position: fixed; inset: 0; z-index: 10000; background: rgb(8 0 0 / .65); }
 .haunted-exit { position: absolute; top: 16px; right: 16px; padding: 12px 18px; background: white; color: #210606; border: 2px solid #a3141c; border-radius: 8px; cursor: pointer; font-weight: 800; }
 .haunted-popup { position: absolute; width: min(310px, 85vw); max-width: calc(100vw - 24px); padding: 22px; background: #130909; color: #f5ece5; border: 2px solid #dc3838; border-radius: 4px; box-shadow: 0 0 35px rgb(200 0 0 / .45); font-family: var(--font-body); }
