@@ -114,7 +114,9 @@ function start(T) {
     if (!(yt > yb + 0.004)) yt = yb + 0.004;
     const d = Math.min(tt, 1 - tt) * (sxB - sxA) * S;   // meters to the nearer end
     const plan = d < spec.endR ? Math.sqrt(Math.max(0, 1 - ((spec.endR - d) / spec.endR) ** 2)) : 1;
-    const w = spec.w * Math.max(plan, spec.minPlan);
+    // Slightly fuller fenders and a tucked waist keep the sides from looking extruded.
+    const fender = spec === BODY ? 1 + 0.018 * (Math.exp(-(((sx - 118) / 34) ** 2)) + Math.exp(-(((sx - 368) / 34) ** 2))) : 1;
+    const w = spec.w * Math.max(plan, spec.minPlan) * fender;
     let k = 1, x = toX(sx);
     if (dome > 0) {   // shrink toward the middle of the end, like the front of an egg
       const phi = dome * Math.PI / 2;
@@ -202,15 +204,15 @@ function start(T) {
   const shade = (c, f) => c.map((v) => clamp(Math.round(v * f), 0, 255));
   const YELLOW = rgb(hex('--yellow', '#f5c814'));
   const BLACK = [0, 0, 0];
-  // [color, roughness, clearcoat, glow]
-  const PAINT = [YELLOW, 0.28, 1, BLACK], PAINT_EDGE = [shade(YELLOW, 0.8), 0.36, 1, BLACK], SEAM = [shade(YELLOW, 0.42), 0.5, 0.4, BLACK];
+  // [color, roughness, clearcoat, glow, metalness]
+  const PAINT = [YELLOW, 0.23, 1, BLACK, 0.42], PAINT_EDGE = [shade(YELLOW, 0.8), 0.3, 1, BLACK, 0.42], SEAM = [shade(YELLOW, 0.22), 0.5, 0.4, BLACK];
   const CLAD = [rgb('#24292d'), 0.74, 0, BLACK], UNDER = [rgb('#121517'), 0.9, 0, BLACK];
   const LAMP = [rgb('#e9eff2'), 0.05, 1, rgb('#7f8a90')], LAMP_RIM = [rgb('#8e9aa1'), 0.12, 1, BLACK];
   const PROJECTOR = [rgb('#4f5a61'), 0.08, 1, BLACK], PROJECTOR_LENS = [rgb('#f7fbfd'), 0.03, 1, rgb('#c7d2d8')];
   const TAIL = [rgb('#b5101a'), 0.12, 1, rgb('#6e0710')];
   const GRILLE = [rgb('#111416'), 0.55, 0.3, BLACK], GRILLE_BAR = [rgb('#3d464c'), 0.3, 0.8, BLACK];
-  const CHROME = [rgb('#e1e7ea'), 0.1, 1, BLACK];
-  const GLASS = [rgb('#16222a'), 0.03, 1, BLACK], PILLAR = [rgb('#0f1215'), 0.12, 1, BLACK];
+  const CHROME = [rgb('#e1e7ea'), 0.1, 1, BLACK, 1];
+  const GLASS = [rgb('#253b48'), 0.045, 1, BLACK, 0.32], PILLAR = [rgb('#0f1215'), 0.12, 1, BLACK];
   const ARCHES = [[118, 196], [368, 196]];
 
   function bodySurface(sec, p) {
@@ -272,9 +274,9 @@ function start(T) {
     const color = new ImageData(W, H), props = new ImageData(W, H), glow = new ImageData(W, H);
     const cd = color.data, pd = props.data, gd = glow.data;
     for (let k = 0; k < W * H; k++) {
-      const [c, rough, coat, e] = grid[k], o = k * 4;
+      const [c, rough, coat, e, metal = 0] = grid[k], o = k * 4;
       cd[o] = c[0]; cd[o + 1] = c[1]; cd[o + 2] = c[2]; cd[o + 3] = 255;
-      pd[o] = Math.round(coat * 255); pd[o + 1] = Math.round(rough * 255); pd[o + 2] = 0; pd[o + 3] = 255;
+      pd[o] = Math.round(coat * 255); pd[o + 1] = Math.round(rough * 255); pd[o + 2] = Math.round(metal * 255); pd[o + 3] = 255;
       gd[o] = e[0]; gd[o + 1] = e[1]; gd[o + 2] = e[2]; gd[o + 3] = 255;
     }
     return { color: texture(color, true), props: texture(props, false), glow: texture(glow, true) };
@@ -396,7 +398,7 @@ function start(T) {
   renderer.shadowMap.type = T.PCFSoftShadowMap;
   const scene = new T.Scene();
   const camera = new T.PerspectiveCamera(26, 480 / 250, 0.1, 60);
-  camera.position.set(0, 1.6, 7.3);
+  camera.position.set(0, 1.9, 7.3);
   camera.lookAt(0, 0.62, 0);
 
   // A photo studio for reflections: a grey room with big softboxes, so the paint and glass catch real highlights.
@@ -420,6 +422,7 @@ function start(T) {
     panel(3, 3.6, [-6.8, 3.2, 1], [0, Math.PI / 2, 0], 4);         // softbox on the left
     panel(3, 3.6, [6.8, 3.2, -1], [0, -Math.PI / 2, 0], 3);        // softbox on the right
     panel(5, 2.2, [0, 3, 6.8], [0, Math.PI, 0], 2.5);              // behind the camera
+    panel(7, 0.35, [0, 1.8, -6.8], [0, 0, 0], 5);                // narrow reflection along the shoulder
     const pmrem = new T.PMREMGenerator(renderer);
     scene.environment = pmrem.fromScene(room, 0.03).texture;
     pmrem.dispose();
@@ -433,6 +436,9 @@ function start(T) {
   sun.shadow.bias = -0.0004;
   sun.shadow.normalBias = 0.02;
   scene.add(sun);
+  const rimLight = new T.DirectionalLight(0xc6deff, 1.1);
+  rimLight.position.set(-4, 3, -5);
+  scene.add(rimLight);
   const ground = new T.Mesh(new T.PlaneGeometry(16, 16), new T.ShadowMaterial({ opacity: 0.28 }));
   ground.rotation.x = -Math.PI / 2;
   ground.receiveShadow = true;
@@ -459,11 +465,12 @@ function start(T) {
 
   /* ---------- The car ---------- */
   const bodyGeo = loft(BODY), cabinGeo = loft(CABIN);
-  const bodyTex = surfaceTextures(BODY, 1024, 448, bodySurface, false);
-  const cabinTex = surfaceTextures(CABIN, 448, 224, cabinSurface, true);
+  const bodyTex = surfaceTextures(BODY, 1536, 640, bodySurface, false);
+  const cabinTex = surfaceTextures(CABIN, 768, 384, cabinSurface, true);
   const surface = (tex) => new T.MeshPhysicalMaterial({
     map: tex.color, roughnessMap: tex.props, clearcoatMap: tex.props, emissiveMap: tex.glow, emissive: 0xffffff, emissiveIntensity: 0.6,
-    roughness: 1, metalness: 0, clearcoat: 1, clearcoatRoughness: 0.03,
+    roughness: 1, metalness: 1, metalnessMap: tex.props, clearcoat: 1, clearcoatRoughness: 0.055,
+    envMapIntensity: 1.15,
   });
   const bodyMesh = new T.Mesh(bodyGeo, surface(bodyTex));
   const cabinMesh = new T.Mesh(cabinGeo, surface(cabinTex));
@@ -472,10 +479,48 @@ function start(T) {
   const blockers = [];
   const addPart = (mesh, shadow = true) => { mesh.castShadow = shadow; car.add(mesh); blockers.push(mesh); return mesh; };
 
-  const paintMat = new T.MeshPhysicalMaterial({ color: new T.Color(`rgb(${YELLOW.join(',')})`), roughness: 0.28, clearcoat: 1, clearcoatRoughness: 0.03 });
+  const paintMat = new T.MeshPhysicalMaterial({ color: new T.Color(`rgb(${YELLOW.join(',')})`), metalness: 0.42, roughness: 0.23, clearcoat: 1, clearcoatRoughness: 0.055 });
   const trimMat = new T.MeshStandardMaterial({ color: 0x1c2023, roughness: 0.62 });
   const chromeMat = new T.MeshStandardMaterial({ color: 0xe2e8eb, metalness: 1, roughness: 0.14 });
   const mirrorGlassMat = new T.MeshStandardMaterial({ color: 0x9fb2bd, metalness: 1, roughness: 0.04 });
+
+  // Find a point on the loft itself so raised details follow the curved sheet metal.
+  function sidePoint(sx, sy, side, spec = BODY, offset = 0.008) {
+    const t = spec.capT ? spec.capT + (1 - 2 * spec.capT) * (sx - spec.sx0 - spec.dome / S) / (spec.sx1 - spec.sx0 - 2 * spec.dome / S) : (sx - spec.sx0) / (spec.sx1 - spec.sx0);
+    const sec = section(spec, clamp(t, 0, 1));
+    const targetY = toY(sy);
+    let best = null, distance = Infinity;
+    for (let i = 0; i <= 128; i++) {
+      const p = ringPoint(sec, 0.1 + i / 128 * 0.3);
+      const d = Math.abs(p.y - targetY);
+      if (d < distance) { best = p; distance = d; }
+    }
+    return new T.Vector3(sec.x, best.y, side * (best.z + offset));
+  }
+  function detailLine(points, radius, material) {
+    const curve = new T.CatmullRomCurve3(points);
+    return addPart(new T.Mesh(new T.TubeGeometry(curve, Math.max(16, points.length * 3), radius, 6, false), material), false);
+  }
+  for (const side of [1, -1]) {
+    // Real panel gaps, beltline trim, and an inset lower sill.
+    for (const seam of [
+      [[128, 124], [138, 143], [150, 164], [160, 184]],
+      [[243, 123], [243, 144], [243, 165], [243, 184]],
+      [[348, 123], [343, 144], [339, 165], [334, 184]],
+      [[160, 184], [205, 186], [265, 186], [324, 184]]
+    ]) detailLine(seam.map(([x, y]) => sidePoint(x, y, side)), 0.003, trimMat);
+    detailLine([130, 170, 215, 260, 305, 342].map(x => sidePoint(x, 123, side)), 0.006, chromeMat);
+    detailLine([164, 200, 250, 290, 322].map(x => sidePoint(x, 187, side)), 0.012, trimMat);
+    for (const sx of [205, 307]) {
+      const recess = new T.Mesh(new T.SphereGeometry(1, 20, 12), trimMat);
+      recess.scale.set(0.115, 0.025, 0.007);
+      recess.position.copy(sidePoint(sx, 141, side));
+      addPart(recess, false);
+      detailLine([sx - 8, sx, sx + 8].map(x => sidePoint(x, 140, side, BODY, 0.026)), 0.012, chromeMat);
+    }
+    // Fuel flap on the rear quarter panel.
+    detailLine([[68, 139], [79, 139], [79, 151], [68, 151], [68, 139]].map(([x, y]) => sidePoint(x, y, side)), 0.0025, trimMat);
+  }
 
   // Black plastic lips around the wheel arches.
   for (const ax of [toX(118), toX(368)]) {
@@ -534,7 +579,26 @@ function start(T) {
   addPart(exhaust);
 
   // Wheels: tire, dark wheel well, brake disc with a red caliper, ten spokes, a rim lip and a center cap.
-  const tireMat = new T.MeshStandardMaterial({ color: 0x16191b, roughness: 0.86, side: T.DoubleSide });
+  const tireBump = (() => {
+    const c = document.createElement('canvas');
+    c.width = 512; c.height = 256;
+    const g = c.getContext('2d');
+    g.fillStyle = '#aaa'; g.fillRect(0, 0, 512, 256);
+    // Lathe UVs run around the tire horizontally, across its profile vertically.
+    g.strokeStyle = '#333'; g.lineWidth = 5;
+    for (const y of [83, 106, 150, 173]) {
+      g.beginPath(); g.moveTo(0, y); g.lineTo(512, y); g.stroke();
+    }
+    g.lineWidth = 3;
+    for (let x = -16; x < 530; x += 16) {
+      g.beginPath(); g.moveTo(x, 67); g.lineTo(x + 10, 105); g.moveTo(x + 10, 151); g.lineTo(x, 189); g.stroke();
+    }
+    const tex = new T.CanvasTexture(c);
+    tex.wrapS = T.RepeatWrapping;
+    tex.anisotropy = Math.min(8, renderer.capabilities.getMaxAnisotropy());
+    return tex;
+  })();
+  const tireMat = new T.MeshStandardMaterial({ color: 0x232527, roughness: 0.9, bumpMap: tireBump, bumpScale: 0.008, side: T.DoubleSide });
   const rimMat = new T.MeshStandardMaterial({ color: 0xd9dfe2, metalness: 1, roughness: 0.22 });
   const darkMat = new T.MeshStandardMaterial({ color: 0x0d1012, roughness: 0.92, side: T.DoubleSide });
   const discMat = new T.MeshStandardMaterial({ color: 0x80898e, metalness: 0.8, roughness: 0.38 });
@@ -564,6 +628,26 @@ function start(T) {
     caliper.position.set(-0.1, 0.03, -0.1);
     caliper.rotation.y = Math.PI / 4;
     w.add(barrel, back, disc, caliper);
+    // Machined rotor holes and five lug nuts, shared geometry for all wheels.
+    for (let k = 0; k < 20; k++) {
+      const angle = k / 20 * Math.PI * 2;
+      const hole = new T.Mesh(rotorHoleGeo, darkMat);
+      hole.rotation.x = -Math.PI / 2;
+      hole.position.set(Math.cos(angle) * 0.13, 0.012, Math.sin(angle) * 0.13);
+      w.add(hole);
+    }
+    for (let k = 0; k < 5; k++) {
+      const angle = k / 5 * Math.PI * 2;
+      const bolt = new T.Mesh(lugGeo, chromeMat);
+      bolt.position.set(Math.cos(angle) * 0.069, 0.08, Math.sin(angle) * 0.069);
+      w.add(bolt);
+    }
+    for (const radius of [0.29, 0.308]) {
+      const sidewall = new T.Mesh(new T.TorusGeometry(radius, 0.0018, 4, 64), tireMat);
+      sidewall.rotation.x = Math.PI / 2;
+      sidewall.position.y = 0.121;
+      w.add(sidewall);
+    }
     for (let k = 0; k < 5; k++) {
       for (const off of [-0.11, 0.11]) {
         const spoke = new T.Mesh(spokeGeo, rimMat);
@@ -586,6 +670,8 @@ function start(T) {
     car.add(w);
     wheels.push(w);
   }
+  const rotorHoleGeo = new T.CircleGeometry(0.006, 8);
+  const lugGeo = new T.CylinderGeometry(0.008, 0.008, 0.016, 6);
   for (const x of [toX(118), toX(368)]) {
     const well = new T.Mesh(new T.CylinderGeometry(0.39, 0.39, 1.62, 48, 1, true), darkMat);
     well.rotation.x = Math.PI / 2;
