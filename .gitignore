@@ -1,0 +1,8 @@
+# Vercel link and build output
+.vercel
+dist/
+
+# The original sign photos show the home address; keep them off GitHub
+img/*.HEIC
+
+.DS_Store

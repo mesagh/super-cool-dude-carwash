@@ -1,0 +1,5 @@
+# Original poster photos show the full home address. Keep them off Vercel.
+img/
+print/
+dist/
+.DS_Store

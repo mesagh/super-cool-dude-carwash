@@ -1,0 +1,477 @@
+<title>Super Cool Dude Carwash</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@300;800;900&family=Nunito:wght@400;600;700;800&family=Permanent+Marker&display=swap">
+<style>
+  /* Layout: the kids' poster, taped to a wall. Their hand-drawn logo opens the page, the poster's
+     price list becomes a menu board, a mud-covered car you can scrub, then a text-to-book form. */
+  :root {
+    --bg: #f3f5f0;          /* the wall the poster is taped to */
+    --paper: #ffffff;       /* poster board, same in both themes */
+    --surface: #ffffff;
+    --ink: #17221b;         /* black marker */
+    --muted: #55625a;
+    --line: #d5dcd2;
+    --yellow: #f5c814;      /* "Super" */
+    --yellow-ink: #1c1700;
+    --purple: #8a1f86;      /* the C and the l */
+    --purple-ink: #ffffff;
+    --green: #1d6a3b;       /* "CARWASH" */
+    --green-ink: #ffffff;
+    --red: #a3141c;         /* "Dude" */
+    --red-ink: #ffffff;
+    --pencil: #9aa29d;      /* shaded sunglasses */
+    --pencil-ink: #17221b;
+    --glass: #c9cfcb;
+    --paper-ink: #17221b;   /* marker on white paper, same in both themes */
+    --paper-red: #b0141d;
+    --tire: #1e2522;        /* car drawing parts, same in both themes */
+    --tire-wall: #3d4743;
+    --rim-hi: #f1f4f5;
+    --rim-low: #8f9a9e;
+    --rim-deep: #5d676b;
+    --chrome: #d7dee2;
+    --trim-light: #3a454b;
+    --trim-dark: #1c2327;
+    --trim-deep: #0e1214;
+    --glass-top: #b4c6d2;
+    --glass-mid: #7891a0;
+    --glass-dark: #24323c;
+    --glass-deep: #121b22;
+    --lamp-hi: #f6fafc;
+    --lamp-mid: #d3dde3;
+    --lamp-edge: #8b9ca6;
+    --tail-hi: #ff6a5e;
+    --tail-mid: #b3121c;
+    --tail-deep: #5c0a10;
+    --disc: #747e83;
+    --disc-dark: #4a5357;
+    --mud: #6e4b2a;
+    --tape: rgb(255 236 150 / .78);
+    --night: #142019;       /* fixed dark band */
+    --night-2: #1d2b22;
+    --night-ink: #eef4ee;
+    --night-muted: #a9b9ae;
+    --night-line: #2f4236;
+    --shadow: 23 34 27;
+
+    --font-sign: "Big Shoulders Display", "Arial Narrow", "Roboto Condensed", Impact, sans-serif;
+    --font-hand: "Permanent Marker", "Marker Felt", "Comic Sans MS", cursive;
+    --font-body: "Nunito", ui-rounded, "SF Pro Rounded", "Segoe UI", system-ui, sans-serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0d130f; --surface: #162019; --ink: #edf3ec; --muted: #a3b0a6; --line: #2a372e;
+      --yellow: #ffd42a; --yellow-ink: #1c1700; --purple: #d872d4; --purple-ink: #1b0619;
+      --green: #4dc37c; --green-ink: #04200d; --red: #ff6161; --red-ink: #2b0303;
+      --pencil: #8e9992; --pencil-ink: #0d130f; --glass: #b9c1bc; --mud: #7b5532; --tape: rgb(255 236 150 / .6);
+      --night: #162019; --night-2: #1f2c23; --night-ink: #eef4ee; --night-muted: #a9b9ae;
+      --night-line: #33473a; --shadow: 0 0 0; color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #0d130f; --surface: #162019; --ink: #edf3ec; --muted: #a3b0a6; --line: #2a372e;
+    --yellow: #ffd42a; --yellow-ink: #1c1700; --purple: #d872d4; --purple-ink: #1b0619;
+    --green: #4dc37c; --green-ink: #04200d; --red: #ff6161; --red-ink: #2b0303;
+    --pencil: #8e9992; --pencil-ink: #0d130f; --glass: #b9c1bc; --mud: #7b5532; --tape: rgb(255 236 150 / .6);
+    --night: #162019; --night-2: #1f2c23; --night-ink: #eef4ee; --night-muted: #a9b9ae;
+    --night-line: #33473a; --shadow: 0 0 0; color-scheme: dark;
+  }
+</style>
+<link rel="stylesheet" href="styles.css">
+
+<header class="topbar">
+  <div class="wrap topbar-inner">
+    <a class="brand" href="#top" aria-label="Super Cool Dude Carwash">
+      <img class="brand-logo" src="assets/logo-glasses.png" width="297" height="96" alt="">
+      <span>Super Cool Dude</span>
+    </a>
+    <nav class="topnav" aria-label="Sections">
+      <a href="#washes">Washes</a>
+      <a href="#membership">Membership</a>
+      <a href="#scrub">Scrub test</a>
+      <a href="#book">Book</a>
+    </nav>
+    <a class="btn btn-yellow btn-sm" href="#book">Book a wash</a>
+  </div>
+</header>
+
+<main id="top">
+  <section class="hero">
+    <div class="wrap hero-grid">
+      <div class="hero-brand">
+        <img class="logo-card" src="assets/logo.jpg" width="1500" height="600" alt="Sunglasses logo: a muddy car in one lens and a clean car in the other">
+        <h1 class="wordmark"><span class="wordmark-top">Super Cool Dude</span> <span class="poster-word">Carwash</span></h1>
+      </div>
+      <div class="hero-copy">
+        <p class="hero-big">Car washes from <mark>$8</mark>. We'll clean your phone too.</p>
+        <div class="hero-actions">
+          <a class="btn btn-yellow" href="#book">Book a wash</a>
+          <a class="btn btn-ghost" href="#washes">See all washes</a>
+        </div>
+        <dl class="contact-mini">
+          <div><dt>Text</dt><dd>650-309-3989</dd></div>
+          <div><dt>Call</dt><dd>215-450-9048</dd></div>
+        </dl>
+      </div>
+    </div>
+  </section>
+
+  <div class="ticker" aria-hidden="true">
+    <div class="ticker-track">
+      <span>Silver $8</span><span>Gold $12</span><span>Premium $20</span><span>Premium+ $24</span><span>Phone cleaning $4</span><span>Membership $8 a month</span>
+      <span>Silver $8</span><span>Gold $12</span><span>Premium $20</span><span>Premium+ $24</span><span>Phone cleaning $4</span><span>Membership $8 a month</span>
+    </div>
+  </div>
+
+  <section class="section" id="washes">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="hand-note">Types of washes →</p>
+        <h2>Pick your wash</h2>
+      </div>
+      <ul class="menu">
+        <li class="wash" style="--tier: var(--pencil); --tier-ink: var(--pencil-ink)">
+          <p class="wash-tag">Silver</p>
+          <p class="wash-price"><span class="cur">$</span>8</p>
+          <p class="wash-what">Outside of your car.</p>
+          <a class="btn btn-ghost wash-btn" href="#book" data-choose="silver">Pick Silver</a>
+        </li>
+        <li class="wash" style="--tier: var(--yellow); --tier-ink: var(--yellow-ink)">
+          <p class="wash-tag">Gold</p>
+          <p class="wash-price"><span class="cur">$</span>12</p>
+          <p class="wash-what">Inside of your car, plus window and windshield cleaning.</p>
+          <a class="btn btn-ghost wash-btn" href="#book" data-choose="gold">Pick Gold</a>
+        </li>
+        <li class="wash" style="--tier: var(--purple); --tier-ink: var(--purple-ink)">
+          <p class="wash-tag">Premium</p>
+          <p class="wash-price"><span class="cur">$</span>20</p>
+          <p class="wash-what">Inside and outside of your car.</p>
+          <a class="btn btn-ghost wash-btn" href="#book" data-choose="premium">Pick Premium</a>
+        </li>
+        <li class="wash" style="--tier: var(--red); --tier-ink: var(--red-ink)">
+          <p class="wash-tag">Premium+</p>
+          <p class="wash-price"><span class="cur">$</span>24</p>
+          <p class="wash-what">Inside and outside of your car, and we clean your phone.</p>
+          <a class="btn btn-ghost wash-btn" href="#book" data-choose="premiumplus">Pick Premium+</a>
+        </li>
+      </ul>
+      <div class="extras">
+        <p class="hand-note">Extras ↓</p>
+        <div class="extra">
+          <svg class="extra-icon" viewBox="0 0 48 64" aria-hidden="true">
+            <rect class="phone-body" x="6" y="3" width="36" height="58" rx="8"/>
+            <rect class="phone-screen" x="11" y="10" width="26" height="40" rx="3"/>
+            <path class="phone-shine" d="M16 16 28 30M16 25 23 33"/>
+            <circle class="phone-btn" cx="24" cy="55" r="2.5"/>
+          </svg>
+          <div class="extra-copy">
+            <h3>Phone cleaner</h3>
+            <p>Get your phone cleaned. It cleans really fast.</p>
+          </div>
+          <p class="wash-price extra-price"><span class="cur">$</span>4</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-member" id="membership">
+    <div class="wrap member-grid">
+      <div class="section-head">
+        <p class="hand-note">Every week, one price →</p>
+        <h2>Membership</h2>
+        <p class="section-sub">Sign up once and get your car cleaned every week.</p>
+      </div>
+      <div class="member-card" style="--tier: var(--green); --tier-ink: var(--green-ink)">
+        <p class="wash-tag">Membership</p>
+        <p class="member-price"><span class="cur">$</span>8<span class="per">/month</span></p>
+        <p class="member-what">One clean per week.</p>
+        <a class="btn btn-yellow" href="#book" data-choose="membership">Join the membership</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-bay" id="scrub">
+    <div class="wrap bay-grid">
+      <div class="bay-copy">
+        <p class="eyebrow">Scrub test</p>
+        <h2>This car needs a Silver.</h2>
+        <p class="section-sub" id="bayHint">Rub over each spot three times to wash off the mud. It gets lighter every time.</p>
+        <div class="meter" role="progressbar" aria-label="How clean the car is" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="meter">
+          <span class="meter-label">Clean-o-meter</span>
+          <span class="meter-track"><span class="meter-fill" id="meterFill"></span></span>
+          <span class="meter-value" id="meterValue">0%</span>
+        </div>
+        <div class="bay-actions">
+          <button class="btn btn-yellow btn-sm" type="button" id="autoWash">Wash it for me</button>
+          <button class="btn btn-ghost btn-sm" type="button" id="muddy" hidden>Get it muddy again</button>
+        </div>
+        <p class="bay-done" id="bayDone" hidden>Super clean. Yours could be next.</p>
+      </div>
+      <figure class="bay">
+        <div class="bay-stage" id="bayStage">
+          <svg class="car" viewBox="0 0 480 250" aria-hidden="true">
+            <defs>
+              <linearGradient id="paintBody" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0" class="paint-hi"/>
+                <stop offset=".16" class="paint-base"/>
+                <stop offset=".3" class="paint-light"/>
+                <stop offset=".33" class="paint-mid"/>
+                <stop offset=".7" class="paint-low"/>
+                <stop offset="1" class="paint-deep"/>
+              </linearGradient>
+              <linearGradient id="paintCabin" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0" class="paint-hi"/>
+                <stop offset=".5" class="paint-base"/>
+                <stop offset="1" class="paint-mid"/>
+              </linearGradient>
+              <linearGradient id="bodyEnds" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0" class="shade-strong"/>
+                <stop offset=".09" class="shade-none"/>
+                <stop offset=".92" class="shade-none"/>
+                <stop offset="1" class="shade-strong"/>
+              </linearGradient>
+              <linearGradient id="glass" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0" class="glass-top"/>
+                <stop offset=".42" class="glass-mid"/>
+                <stop offset=".45" class="glass-dark"/>
+                <stop offset="1" class="glass-deep"/>
+              </linearGradient>
+              <linearGradient id="pillar" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0" class="trim-dark"/>
+                <stop offset=".45" class="trim-light"/>
+                <stop offset="1" class="trim-dark"/>
+              </linearGradient>
+              <linearGradient id="cladding" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0" class="trim-light"/>
+                <stop offset=".35" class="trim-dark"/>
+                <stop offset="1" class="trim-deep"/>
+              </linearGradient>
+              <radialGradient id="lamp" cx=".45" cy=".4" r=".7">
+                <stop offset="0" class="lamp-hi"/>
+                <stop offset=".6" class="lamp-mid"/>
+                <stop offset="1" class="lamp-edge"/>
+              </radialGradient>
+              <linearGradient id="tail" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0" class="tail-hi"/>
+                <stop offset=".5" class="tail-mid"/>
+                <stop offset="1" class="tail-deep"/>
+              </linearGradient>
+              <radialGradient id="well" cx=".5" cy="1" r="1">
+                <stop offset="0" class="trim-deep"/>
+                <stop offset="1" class="trim-dark"/>
+              </radialGradient>
+              <radialGradient id="tireGrad" cx=".5" cy=".5" r=".5">
+                <stop offset=".62" class="tire-side"/>
+                <stop offset=".9" class="tire-lo"/>
+                <stop offset="1" class="tire-edge"/>
+              </radialGradient>
+              <radialGradient id="disc" cx=".5" cy=".5" r=".5">
+                <stop offset=".3" class="disc-dark"/>
+                <stop offset="1" class="disc"/>
+              </radialGradient>
+              <linearGradient id="spoke" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0" class="rim-hi"/>
+                <stop offset="1" class="rim-low"/>
+              </linearGradient>
+              <linearGradient id="rimRing" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0" class="rim-hi"/>
+                <stop offset=".55" class="rim-low"/>
+                <stop offset="1" class="rim-deep"/>
+              </linearGradient>
+              <radialGradient id="hubGrad" cx=".38" cy=".35" r=".75">
+                <stop offset="0" class="rim-hi"/>
+                <stop offset="1" class="rim-deep"/>
+              </radialGradient>
+              <clipPath id="glassClip">
+                <path d="M130 116L172 78Q180 70 196 70L236 67V116Z"/>
+                <path d="M250 67L274 69Q286 70 294 77L336 116H250Z"/>
+              </clipPath>
+              <!-- Rounds each panel: its edges become a soft slope lit from the upper left, with a glossy highlight. -->
+              <filter id="relief" x="-4%" y="-8%" width="108%" height="116%" color-interpolation-filters="sRGB">
+                <feGaussianBlur in="SourceAlpha" stdDeviation="6" result="height"/>
+                <feDiffuseLighting in="height" surfaceScale="5" diffuseConstant="1" lighting-color="#ffffff" result="diffuse">
+                  <feDistantLight azimuth="225" elevation="55"/>
+                </feDiffuseLighting>
+                <feComposite in="SourceGraphic" in2="diffuse" operator="arithmetic" k1="1.2" k2="0" k3="0" k4="0" result="shaded"/>
+                <feSpecularLighting in="height" surfaceScale="5" specularConstant="1" specularExponent="24" lighting-color="#ffffff" result="specular">
+                  <feDistantLight azimuth="225" elevation="55"/>
+                </feSpecularLighting>
+                <feComposite in="specular" in2="SourceAlpha" operator="in" result="gloss"/>
+                <feComposite in="gloss" in2="shaded" operator="arithmetic" k1="0" k2=".55" k3="1" k4="0"/>
+              </filter>
+              <filter id="soften" x="-10%" y="-300%" width="120%" height="700%">
+                <feGaussianBlur stdDeviation="5"/>
+              </filter>
+              <filter id="glow" x="-5%" y="-150%" width="110%" height="400%">
+                <feGaussianBlur stdDeviation="1.6"/>
+              </filter>
+              <g id="wheel">
+                <circle class="tire" r="32"/>
+                <path class="tire-shine" d="M-26-15A30 30 0 0 1 15-26"/>
+                <circle class="rim-well" r="21"/>
+                <circle class="brake-disc" r="16"/>
+                <rect class="caliper" x="-5" y="-19.5" width="10" height="7" rx="2.5" transform="rotate(-38)"/>
+                <g class="spokes-shadow" transform="translate(1.2 1.6)">
+                  <path d="M-2.6-6L-4.4-19.5H4.4L2.6-6Z"/>
+                  <path d="M-2.6-6L-4.4-19.5H4.4L2.6-6Z" transform="rotate(72)"/>
+                  <path d="M-2.6-6L-4.4-19.5H4.4L2.6-6Z" transform="rotate(144)"/>
+                  <path d="M-2.6-6L-4.4-19.5H4.4L2.6-6Z" transform="rotate(216)"/>
+                  <path d="M-2.6-6L-4.4-19.5H4.4L2.6-6Z" transform="rotate(288)"/>
+                </g>
+                <g class="spokes">
+                  <path d="M-2.6-6L-4.4-19.5H4.4L2.6-6Z"/>
+                  <path d="M-2.6-6L-4.4-19.5H4.4L2.6-6Z" transform="rotate(72)"/>
+                  <path d="M-2.6-6L-4.4-19.5H4.4L2.6-6Z" transform="rotate(144)"/>
+                  <path d="M-2.6-6L-4.4-19.5H4.4L2.6-6Z" transform="rotate(216)"/>
+                  <path d="M-2.6-6L-4.4-19.5H4.4L2.6-6Z" transform="rotate(288)"/>
+                </g>
+                <circle class="rim-ring" r="20"/>
+                <circle class="hub" r="5.5"/>
+                <circle class="hub-glint" cx="-1.7" cy="-1.9" r="1.6"/>
+                <path class="rim-lip" d="M-18.5-7.8A20 20 0 0 1 7.8-18.5"/>
+              </g>
+              <path id="star" d="M0-15 4-4 15 0 4 4 0 15-4 4-15 0-4-4Z"/>
+            </defs>
+            <ellipse class="car-shadow" cx="240" cy="233" rx="214" ry="9" filter="url(#soften)"/>
+            <ellipse class="underbody" cx="243" cy="215" rx="150" ry="11" filter="url(#soften)"/>
+            <ellipse class="tire-contact" cx="118" cy="231.5" rx="30" ry="3.2" filter="url(#glow)"/>
+            <ellipse class="tire-contact" cx="368" cy="231.5" rx="30" ry="3.2" filter="url(#glow)"/>
+            <path data-mask class="car-paint-cabin" filter="url(#relief)" d="M108 120L168 74Q178 64 196 62Q236 57 276 62Q290 64 300 72L352 120Z"/>
+            <path data-mask class="car-paint-body" filter="url(#relief)" d="M40 124Q76 116 112 118L338 118Q392 122 446 134Q462 140 461 160L459 180Q457 194 440 196L406 196A38 38 0 1 0 330 196L156 196A38 38 0 1 0 80 196L44 196Q28 194 26 180L24 150Q24 128 40 124Z"/>
+            <path class="car-ends" d="M40 124Q76 116 112 118L338 118Q392 122 446 134Q462 140 461 160L459 180Q457 194 440 196L406 196A38 38 0 1 0 330 196L156 196A38 38 0 1 0 80 196L44 196Q28 194 26 180L24 150Q24 128 40 124Z"/>
+            <path class="cladding" d="M157 196Q158 188 166 188H320Q328 188 329 196Z"/>
+            <path class="cladding" d="M407 196Q408 186 418 186H448Q456 186 458 180Q457 194 440 196Z"/>
+            <path class="cladding" d="M79 196Q78 186 68 186H38Q30 186 27 180Q28 194 44 196Z"/>
+            <path class="sill-light" d="M166 188.6H320"/>
+            <path class="car-glass" d="M130 116L172 78Q180 70 196 70L236 67V116Z"/>
+            <path class="car-glass" d="M250 67L274 69Q286 70 294 77L336 116H250Z"/>
+            <g class="glass-depth" clip-path="url(#glassClip)">
+              <path class="glass-shade" d="M120 60H350V77H120Z"/>
+            </g>
+            <g class="glass-glint" clip-path="url(#glassClip)">
+              <path class="glint-wide" d="M160 124 206 60"/>
+              <path class="glint-thin" d="M182 124 228 60"/>
+              <path class="glint-wide" d="M282 124 322 64"/>
+            </g>
+            <rect class="car-pillar" x="236" y="68" width="14" height="51"/>
+            <path class="roof-shine" d="M204 66Q236 62 268 67" filter="url(#glow)"/>
+            <path class="car-shine" d="M46 133Q240 129 444 143" filter="url(#glow)"/>
+            <path class="car-crease" d="M46 140Q240 136 446 150"/>
+            <path class="car-seam" d="M243 121V188M348 122Q350 150 328 182M126 122Q154 150 160 184"/>
+            <path class="car-seam-light" d="M245 121V188M350 122Q352 150 330 182M128 122Q156 150 162 184"/>
+            <path class="handle-recess" d="M298 144H316M196 144H214"/>
+            <path class="car-handle" d="M298 141H316M196 141H214"/>
+            <ellipse class="mirror-shadow" cx="350" cy="127" rx="11" ry="2.4"/>
+            <path class="car-mirror" filter="url(#relief)" d="M338 108H354Q360 108 360 114V118Q360 122 356 122H340Z"/>
+            <path class="car-light" d="M432 139Q450 139 457 148Q451 154 436 151Z"/>
+            <circle class="lamp-projector" cx="446" cy="145.5" r="3"/>
+            <path class="lamp-drl" d="M435 141.5Q447 140.5 454 146" filter="url(#glow)"/>
+            <path class="car-tail" d="M29 131H42Q45 131 45 135V143Q45 147 41 147H26Z"/>
+            <path class="tail-shine" d="M31 133.5H41"/>
+            <path class="car-arch" d="M406 196A38 38 0 1 0 330 196Z"/>
+            <path class="car-arch" d="M156 196A38 38 0 1 0 80 196Z"/>
+            <path class="arch-lip" d="M408 195A40 40 0 0 0 328 195M158 195A40 40 0 0 0 78 195"/>
+            <circle data-mask class="car-tire" cx="118" cy="200" r="32"/>
+            <circle data-mask class="car-tire" cx="368" cy="200" r="32"/>
+            <use href="#wheel" x="118" y="200"/>
+            <use href="#wheel" x="368" y="200"/>
+            <g class="sparkles">
+              <use href="#star" transform="translate(200 40) scale(1.2)"/>
+              <use href="#star" transform="translate(424 108) scale(.8)"/>
+              <use href="#star" transform="translate(90 112)"/>
+              <use href="#star" transform="translate(316 166) scale(.7)"/>
+              <use href="#star" transform="translate(276 34) scale(.6)"/>
+            </g>
+          </svg>
+          <canvas class="mud" id="mud" aria-hidden="true"></canvas>
+          <canvas class="fx" id="fx" aria-hidden="true"></canvas>
+          <span class="bay-tip" id="bayTip" aria-hidden="true">rub me!</span>
+          <div class="bay-turn" id="bayTurn" hidden>
+            <button class="turn-btn" type="button" id="turnLeft" aria-label="Turn the car left">↺</button>
+            <button class="turn-btn" type="button" id="turnRight" aria-label="Turn the car right">↻</button>
+          </div>
+        </div>
+      </figure>
+    </div>
+  </section>
+
+  <section class="section section-night" id="book">
+    <div class="wrap book-grid">
+      <div class="book-intro">
+        <p class="eyebrow">Book a wash</p>
+        <h2>Text or call us.</h2>
+        <ul class="ways">
+          <li>
+            <h3>Text</h3>
+            <p class="way-num" id="textNum">650-309-3989</p>
+            <button class="copy-chip" type="button" data-copy="650-309-3989">Copy number</button>
+          </li>
+          <li>
+            <h3>Call</h3>
+            <p class="way-num">215-450-9048</p>
+            <button class="copy-chip" type="button" data-copy="215-450-9048">Copy number</button>
+          </li>
+        </ul>
+      </div>
+
+      <form class="booker" id="booker" novalidate>
+        <p class="booker-title">Write my text for me</p>
+        <fieldset class="field">
+          <legend>Wash</legend>
+          <div class="opts opts-4">
+            <label class="opt" style="--tier: var(--pencil); --tier-ink: var(--pencil-ink)"><input type="radio" name="wash" id="wash-silver" value="silver"><span>Silver<em>$8</em></span></label>
+            <label class="opt" style="--tier: var(--yellow); --tier-ink: var(--yellow-ink)"><input type="radio" name="wash" id="wash-gold" value="gold"><span>Gold<em>$12</em></span></label>
+            <label class="opt" style="--tier: var(--purple); --tier-ink: var(--purple-ink)"><input type="radio" name="wash" id="wash-premium" value="premium" checked><span>Premium<em>$20</em></span></label>
+            <label class="opt" style="--tier: var(--red); --tier-ink: var(--red-ink)"><input type="radio" name="wash" id="wash-premiumplus" value="premiumplus"><span>Premium+<em>$24</em></span></label>
+            <label class="opt opt-wide" style="--tier: var(--green); --tier-ink: var(--green-ink)"><input type="radio" name="wash" id="wash-membership" value="membership"><span>Membership · one clean per week<em>$8 a month</em></span></label>
+          </div>
+        </fieldset>
+        <label class="check" id="phoneRow"><input type="checkbox" id="addPhone" name="addPhone"><span>Add phone cleaning <em>+$4</em></span></label>
+        <div class="row-2">
+          <div class="field">
+            <label for="when">When?</label>
+            <input type="text" id="when" name="when" placeholder="Saturday around 10am">
+            <div class="quick" role="group" aria-label="Quick picks">
+              <button type="button" data-when="today">Today</button>
+              <button type="button" data-when="tomorrow">Tomorrow</button>
+              <button type="button" data-when="this weekend">This weekend</button>
+            </div>
+          </div>
+          <div class="field">
+            <label for="name">Your name</label>
+            <input type="text" id="name" name="name" autocomplete="name" placeholder="Your name">
+          </div>
+        </div>
+
+        <div class="phone">
+          <div class="phone-head">
+            <span>To: Super Cool Dude Carwash</span>
+            <span class="phone-num">650-309-3989</span>
+          </div>
+          <p class="bubble" id="msg" aria-live="polite"></p>
+          <p class="total">Total <strong id="total">$20</strong></p>
+        </div>
+
+        <div class="book-actions">
+          <button class="btn btn-yellow" type="submit" id="copyBtn">Copy the text</button>
+          <a class="btn btn-ghost-night" id="smsLink" href="sms:+16503093989">Open in Messages</a>
+        </div>
+        <p class="book-note" id="bookNote">On a phone, “Open in Messages” starts the text for you. If it doesn't, copy the text and send it to 650-309-3989.</p>
+      </form>
+    </div>
+  </section>
+</main>
+
+<footer class="footer">
+  <div class="wrap footer-grid">
+    <p class="footer-brand">Super Cool Dude <span>Carwash</span></p>
+    <dl class="footer-facts">
+      <div><dt>Text</dt><dd>650-309-3989</dd></div>
+      <div><dt>Call</dt><dd>215-450-9048</dd></div>
+    </dl>
+  </div>
+</footer>
+
+<script src="app.js"></script>
+<script type="module" src="scrub3d.js"></script>

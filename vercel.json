@@ -1,0 +1,14 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": null,
+  "buildCommand": "node build.mjs",
+  "outputDirectory": "dist",
+  "redirects": [
+    {
+      "source": "/(.*)",
+      "has": [{ "type": "host", "value": "www.supercooldudecarwash.com" }],
+      "destination": "https://supercooldudecarwash.com/$1",
+      "permanent": true
+    }
+  ]
+}
