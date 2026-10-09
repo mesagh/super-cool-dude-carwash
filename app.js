@@ -152,7 +152,7 @@
     gold: { name: 'Gold', price: 12 },
     premium: { name: 'Premium', price: 20 },
     premiumplus: { name: 'Premium+', price: 24 },
-    membership: { name: 'Membership', price: 8, monthly: true },
+    membership: { name: 'Membership', price: 32, monthly: true },
   };
   const PHONE_CLEANING = 4;
   const SMS_NUMBER = '+16503093989';

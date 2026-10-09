@@ -131,6 +131,7 @@ h2 {
 @media (min-width: 900px) { .hero-grid { grid-template-columns: 1.1fr 1fr; } }
 .hero-brand { display: grid; gap: 1.3rem; justify-items: start; min-width: 0; }
 .poster-card {
+  position: relative;
   width: 100%;
   max-width: 480px;
   height: auto;
@@ -139,6 +140,8 @@ h2 {
   border-radius: 18px;
   box-shadow: 8px 8px 0 var(--yellow);
 }
+.poster-card > img:first-child { width: 100%; border-radius: 15px; }
+.poster-card .poster-qr { position: absolute; left: 8%; top: 75.7%; width: 22%; height: auto; background: white; }
 .wordmark { margin: 0; display: grid; gap: .15rem; line-height: .9; }
 .wordmark-top {
   font-family: var(--font-sign);

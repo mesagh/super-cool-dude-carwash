@@ -101,7 +101,10 @@
   <section class="hero">
     <div class="wrap hero-grid">
       <div class="hero-brand">
-        <img class="poster-card" src="assets/poster.png" width="1632" height="2112" alt="Super Cool Dude Carwash poster with wash prices, membership, booking numbers, and a QR code">
+        <div class="poster-card">
+          <img src="assets/poster-membership-32.png" width="1103" height="1426" alt="Super Cool Dude Carwash poster with wash prices, $32 monthly membership, and booking numbers">
+          <img class="poster-qr" src="assets/booking-qr.png" alt="Scan to visit Super Cool Dude Carwash">
+        </div>
         <h1 class="wordmark"><span class="wordmark-top">Super Cool Dude</span> <span class="poster-word">Carwash</span></h1>
       </div>
       <div class="hero-copy">
@@ -120,8 +123,8 @@
 
   <div class="ticker" aria-hidden="true">
     <div class="ticker-track">
-      <span>Silver $8</span><span>Gold $12</span><span>Premium $20</span><span>Premium+ $24</span><span>Phone cleaning $4</span><span>Membership $8 a month</span>
-      <span>Silver $8</span><span>Gold $12</span><span>Premium $20</span><span>Premium+ $24</span><span>Phone cleaning $4</span><span>Membership $8 a month</span>
+      <span>Silver $8</span><span>Gold $12</span><span>Premium $20</span><span>Premium+ $24</span><span>Phone cleaning $4</span><span>Membership $32 a month</span>
+      <span>Silver $8</span><span>Gold $12</span><span>Premium $20</span><span>Premium+ $24</span><span>Phone cleaning $4</span><span>Membership $32 a month</span>
     </div>
   </div>
 
@@ -192,7 +195,7 @@
       </div>
       <div class="member-card" style="--tier: var(--green); --tier-ink: var(--green-ink)">
         <p class="wash-tag">Membership</p>
-        <p class="member-price"><span class="cur">$</span>8<span class="per">/month</span></p>
+        <p class="member-price"><span class="cur">$</span>32<span class="per">/month</span></p>
         <p class="member-what">One clean per week.</p>
         <a class="btn btn-yellow" href="#book" data-choose="membership">Join the membership</a>
       </div>
@@ -307,7 +310,7 @@
             <label class="opt" style="--tier: var(--yellow); --tier-ink: var(--yellow-ink)"><input type="radio" name="wash" id="wash-gold" value="gold"><span>Gold<em>$12</em></span></label>
             <label class="opt" style="--tier: var(--purple); --tier-ink: var(--purple-ink)"><input type="radio" name="wash" id="wash-premium" value="premium" checked><span>Premium<em>$20</em></span></label>
             <label class="opt" style="--tier: var(--red); --tier-ink: var(--red-ink)"><input type="radio" name="wash" id="wash-premiumplus" value="premiumplus"><span>Premium+<em>$24</em></span></label>
-            <label class="opt opt-wide" style="--tier: var(--green); --tier-ink: var(--green-ink)"><input type="radio" name="wash" id="wash-membership" value="membership"><span>Membership · one clean per week<em>$8 a month</em></span></label>
+            <label class="opt opt-wide" style="--tier: var(--green); --tier-ink: var(--green-ink)"><input type="radio" name="wash" id="wash-membership" value="membership"><span>Membership · one clean per week<em>$32 a month</em></span></label>
           </div>
         </fieldset>
         <label class="check" id="phoneRow"><input type="checkbox" id="addPhone" name="addPhone"><span>Add phone cleaning <em>+$4</em></span></label>
