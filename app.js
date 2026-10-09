@@ -11,14 +11,22 @@
     'Something is watching from the back seat.',
     'The footprints stop inside your car.',
     'You washed it. It came back.',
-    'Do not look in the rearview mirror.'
+    'Do not look in the rearview mirror.',
+    'Someone is hiding behind the car.'
   ];
+
+  // Freddy peeks out from behind the scrub-test car while this is on (scrub3d.js, or CSS for the flat car).
+  function setHaunted(on) {
+    document.documentElement.classList.toggle('is-haunted', on);
+    document.dispatchEvent(new Event('hauntedchange'));
+  }
 
   function stop() {
     clearInterval(timer);
     timer = null;
     layer?.remove();
     layer = null;
+    setHaunted(false);
     previousFocus?.focus();
   }
 
@@ -33,17 +41,17 @@
     exit.addEventListener('click', stop);
     layer.append(exit);
     document.body.append(layer);
+    setHaunted(true);
     exit.focus();
 
     function popup() {
-      // Keep the prank bounded even if it is left running.
-      if (layer.querySelectorAll('.haunted-popup').length >= 5) {
+      // Keep the prank bounded even if it is left running, and leave room to see the page.
+      const most = window.innerWidth < 600 ? 2 : 4;
+      while (layer.querySelectorAll('.haunted-popup').length >= most) {
         layer.querySelector('.haunted-popup').remove();
       }
       const card = document.createElement('section');
       card.className = 'haunted-popup';
-      card.style.left = `${5 + Math.random() * 55}%`;
-      card.style.top = `${15 + Math.random() * 55}%`;
       const title = document.createElement('strong');
       title.textContent = '☠ THE CARWASH IS HAUNTED ☠';
       const message = document.createElement('p');
@@ -53,9 +61,13 @@
       close.addEventListener('click', () => card.remove());
       card.append(title, message, close);
       layer.append(card);
+      // Somewhere random that stays fully on screen, below the exit button.
+      const spot = (space, size, from) => from + Math.random() * Math.max(0, space - size - from - 12);
+      card.style.left = `${spot(window.innerWidth, card.offsetWidth, 12)}px`;
+      card.style.top = `${spot(window.innerHeight, card.offsetHeight, 76)}px`;
     }
     popup();
-    timer = setInterval(popup, 1800);
+    timer = setInterval(popup, 2600);
   }
 
   function askForCode() {
@@ -118,10 +130,6 @@
     }
   }
 
-  document.querySelectorAll('[data-secret-arrow]').forEach((button) => {
-    button.addEventListener('click', () => acceptArrow(button.dataset.secretArrow));
-  });
-
   window.addEventListener('keydown', (event) => {
     if (event.key === 'Escape' && layer) { stop(); return; }
     if (event.repeat || event.ctrlKey || event.metaKey || event.altKey ||
@@ -130,9 +138,8 @@
       return;
     }
     if (layer || codeDialog) return;
-    // Ignore unrelated keys so Tab navigation between arrow buttons also works.
+    // Only arrow keys count. They still scroll the page as usual.
     if (!event.key.startsWith('Arrow')) return;
-    event.preventDefault();
     acceptArrow(event.key);
   }, true);
 })();
@@ -747,4 +754,66 @@
 
   compose();
   window.addEventListener('pageshow', compose);
+
+  /* ---------- Reviews: write the review as a text message ---------- */
+  const reviewForm = document.getElementById('reviewForm');
+  const reviewList = document.getElementById('reviewList');
+  const reviewEmpty = document.getElementById('reviewEmpty');
+  const reviewStars = [...document.querySelectorAll('#reviewStars .star')];
+  const reviewText = document.getElementById('reviewText');
+  const reviewName = document.getElementById('reviewName');
+  const reviewSms = document.getElementById('reviewSms');
+  const reviewCopy = document.getElementById('reviewCopy');
+  const reviewNote = document.getElementById('reviewNote');
+  const reviewNoteDefault = reviewNote.textContent;
+  let reviewMessage = '';
+
+  // Until real reviews are added to the list, show the "no reviews yet" card instead.
+  const hasReviews = Boolean(reviewList.querySelector('.review'));
+  reviewList.hidden = !hasReviews;
+  reviewEmpty.hidden = hasReviews;
+
+  // Builds the text and returns what the customer wrote (empty if nothing yet).
+  function composeReview() {
+    const stars = Number(reviewForm.elements.stars.value) || 0;
+    reviewStars.forEach((label, i) => label.classList.toggle('is-on', i < stars));
+    const text = reviewText.value.trim();
+    const name = reviewName.value.trim();
+    const lines = ['Review for Super Cool Dude Carwash'];
+    if (stars) lines.push(`${'★'.repeat(stars)}${'☆'.repeat(5 - stars)} (${stars} out of 5)`);
+    if (text) lines.push(`"${text}"`);
+    if (name) lines.push(`From: ${name}`);
+    reviewMessage = lines.join('\n');
+    reviewSms.href = `sms:${SMS_NUMBER}?&body=${encodeURIComponent(reviewMessage)}`;
+    return text;
+  }
+
+  function setReviewNote(text, ok) {
+    reviewNote.textContent = text;
+    reviewNote.classList.toggle('is-ok', !!ok);
+  }
+
+  function needWords() {
+    setReviewNote('Write a few words about your wash first.', false);
+    reviewText.focus();
+  }
+
+  reviewForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    if (!composeReview()) { needWords(); return; }
+    copy(reviewMessage).then(() => {
+      flash(reviewCopy, 'Copied!');
+      setReviewNote(`Copied. Paste it into a text to ${TEXT_NUMBER}.`, true);
+    }).catch(() => {
+      setReviewNote(`Copying was blocked. Text your review to ${TEXT_NUMBER}.`, false);
+    });
+  });
+
+  reviewSms.addEventListener('click', (e) => {
+    if (!composeReview()) { e.preventDefault(); needWords(); }
+  });
+
+  reviewForm.addEventListener('input', () => { composeReview(); setReviewNote(reviewNoteDefault, false); });
+  composeReview();
+  window.addEventListener('pageshow', composeReview);
 })();

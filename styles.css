@@ -645,21 +645,85 @@ h2 {
 .book-note { margin: 0; font-size: .9rem; color: var(--night-muted); }
 .book-note.is-ok { color: var(--yellow); font-weight: 700; }
 
+/* Reviews: real reviews from customers, plus a form that texts us a new one */
+.section-reviews { background: var(--bg); }
+.reviews-grid { display: grid; gap: clamp(1.75rem, 4vw, 3rem); }
+@media (min-width: 900px) { .reviews-grid { grid-template-columns: 1fr 1fr; align-items: start; } }
+.reviews-intro { display: grid; gap: 1.25rem; align-content: start; min-width: 0; }
+.reviews-intro .section-head { margin-bottom: 0; }
+.review-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 1rem; }
+.review { display: grid; gap: .5rem; padding: 1.1rem 1.25rem; background: var(--surface); border: 3px solid var(--ink); border-radius: 14px; box-shadow: 5px 5px 0 var(--yellow); }
+.review-stars { margin: 0; font-size: 1.35rem; line-height: 1; letter-spacing: .08em; color: var(--yellow); -webkit-text-stroke: 1px var(--ink); }
+.review blockquote { margin: 0; font-size: 1.1rem; font-weight: 700; }
+.review blockquote p { margin: 0; }
+.review-by { margin: 0; font-size: .9rem; font-weight: 700; color: var(--muted); }
+.review-empty { margin: 0; padding: 1.1rem 1.25rem; font-weight: 700; color: var(--muted); border: 2.5px dashed var(--line); border-radius: 14px; }
+.review-form {
+  display: grid;
+  gap: 1.15rem;
+  min-width: 0;
+  padding: clamp(1rem, 3vw, 1.75rem);
+  background: var(--surface);
+  border: 3px solid var(--ink);
+  border-radius: 18px;
+  box-shadow: 8px 8px 0 var(--purple);
+}
+.review-form .field legend, .review-form .field > label { color: var(--muted); }
+.review-form textarea, .review-form input[type="text"] {
+  width: 100%;
+  padding: .75rem .9rem;
+  font: inherit;
+  font-weight: 600;
+  color: var(--ink);
+  background: var(--bg);
+  border: 2px solid var(--line);
+  border-radius: 12px;
+}
+.review-form textarea { resize: vertical; min-height: 6.5rem; }
+.review-form textarea::placeholder, .review-form input[type="text"]::placeholder { color: var(--muted); opacity: .8; }
+.review-form textarea:focus, .review-form input[type="text"]:focus { outline: 3px solid var(--purple); outline-offset: 1px; }
+.stars { display: flex; gap: .15rem; }
+.star { position: relative; display: block; }
+.star input { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: pointer; }
+.star span { display: block; padding: 0 .1rem; font-size: 2.2rem; line-height: 1.1; color: var(--line); -webkit-text-stroke: 1.5px var(--ink); transition: color .1s ease, transform .1s ease; }
+.star.is-on span { color: var(--yellow); }
+/* While pointing at the stars, preview the rating under the pointer. */
+.stars:hover .star span { color: var(--line); }
+.stars .star:hover span, .stars .star:has(~ .star:hover) span { color: var(--yellow); }
+.star:hover span { transform: scale(1.12); }
+.star input:focus-visible + span { outline: 3px solid var(--purple); outline-offset: 2px; border-radius: 6px; }
+.review-note { margin: 0; font-size: .9rem; color: var(--muted); }
+.review-note.is-ok { color: var(--green); font-weight: 700; }
+
 /* Secret haunted-carwash popups */
-.secret-arrows { display: flex; justify-content: center; gap: .5rem; margin-top: .75rem; }
-.secret-arrows button { width: 40px; height: 40px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); color: var(--ink); font-size: 1.25rem; cursor: pointer; }
 .haunted-code { width: min(360px, calc(100vw - 32px)); padding: 24px; border: 2px solid var(--green); border-radius: 12px; background: var(--surface); color: var(--ink); font-family: var(--font-body); }
 .haunted-code::backdrop { background: rgb(0 0 0 / .65); }
 .haunted-code label { display: grid; gap: 12px; font-weight: 800; }
 .haunted-code input { width: 100%; box-sizing: border-box; padding: 12px; border: 1px solid var(--line); border-radius: 6px; font: inherit; background: var(--bg); color: var(--ink); }
 .haunted-code button { margin-right: 8px; padding: 10px 18px; border: 0; border-radius: 6px; background: var(--yellow); color: var(--yellow-ink); cursor: pointer; font: inherit; font-weight: 800; }
 .haunted-code [role="status"] { min-height: 1.5em; }
-.haunted-layer { position: fixed; inset: 0; z-index: 10000; background: rgb(8 0 0 / .65); }
+/* The haunted layer only decorates. Scrolls, taps and clicks fall through to the page,
+   except on the popups and the exit button. */
+.haunted-layer { position: fixed; inset: 0; z-index: 10000; overflow: hidden; pointer-events: none; background: radial-gradient(ellipse at center, rgb(30 0 40 / 0) 45%, rgb(20 0 30 / .5) 100%); }
+.haunted-layer::before { content: ""; position: absolute; inset: auto -15% 0; height: 30vh; background: radial-gradient(ellipse at 30% 100%, rgb(225 230 255 / .4), transparent 60%), radial-gradient(ellipse at 75% 100%, rgb(225 230 255 / .32), transparent 55%); animation: spook-fog 9s ease-in-out infinite alternate; }
+.haunted-exit, .haunted-popup { pointer-events: auto; }
 .haunted-exit { position: absolute; top: 16px; right: 16px; padding: 12px 18px; background: white; color: #210606; border: 2px solid #a3141c; border-radius: 8px; cursor: pointer; font-weight: 800; }
-.haunted-popup { position: absolute; width: min(310px, 85vw); max-width: calc(100vw - 24px); padding: 22px; background: #130909; color: #f5ece5; border: 2px solid #dc3838; border-radius: 4px; box-shadow: 0 0 35px rgb(200 0 0 / .45); font-family: var(--font-body); }
-.haunted-popup strong { color: #ff6969; font-family: var(--font-hand); }
+.haunted-popup { position: absolute; width: min(290px, 82vw); padding: 18px 20px 20px; text-align: center; background: #160b1f; color: #f5ece5; border: 2px solid #dc3838; border-radius: 10px; box-shadow: 0 0 35px rgb(200 0 0 / .45); font-family: var(--font-body); animation: spook-pop .4s cubic-bezier(.2, 1.5, .4, 1); }
+.haunted-popup strong { display: block; color: #ff6969; font-family: var(--font-hand); }
+.haunted-popup p { margin: .4rem 0 .8rem; }
 .haunted-popup button { padding: 6px 14px; background: #eee3dd; color: #210606; border: 0; border-radius: 4px; cursor: pointer; }
-@media (max-width: 600px) { .haunted-popup { left: 6% !important; } }
+@media (max-width: 600px) { .haunted-popup { padding: 14px 16px 16px; } }
+@keyframes spook-pop { from { opacity: 0; transform: scale(.6); } }
+@keyframes spook-fog { to { translate: 8% 0; } }
+/* Freddy behind the flat 2D car: he rises over the roof now and then. (The 3D car does its own.) */
+.freddy-2d { display: none; }
+.is-haunted .freddy-2d { display: inline; transform: translateY(60px); animation: freddy-peek 7s ease-in-out 1s infinite; }
+@keyframes freddy-peek {
+  0%, 30% { transform: translateY(60px); }
+  44%, 72% { transform: translateY(0); }
+  84%, 100% { transform: translateY(60px); }
+}
+@media (prefers-reduced-motion: reduce) { .is-haunted .freddy-2d { transform: none; } }
 
 /* Footer */
 .footer { padding-block: 2.75rem 3.25rem; background: var(--bg); border-top: 3px solid var(--ink); }

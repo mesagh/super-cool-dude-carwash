@@ -942,6 +942,154 @@ function start(T) {
     fctx.globalAlpha = 1;
   }
 
+  /* ---------- Haunted mode: Freddy peeks out from behind the car ---------- */
+  // A flat cutout standing behind the car (the drawing is 200 x 260, assets/freddy.svg). Before each
+  // peek he looks at the frame just drawn and picks a spot where the car hides him up to the eyes
+  // and there's room above it for his head and hat, so it works however the car is turned.
+  const freddy = (() => {
+    const W = 1.8, H = W * 260 / 200;
+    const Z = -2.7;                                // behind the car's far side at every angle
+    const above = (y) => H * (0.5 - y / 260);      // how far a point of the drawing sits above the cutout's middle
+    const EYES = above(90), HAT = above(16);
+    const HEAD = 0.375 * W, EYE_SPAN = 0.21 * W;   // half-widths: ear to ear, and across both eyes
+    const RISE = 1300, HOLD = 1900, SINK = 650;
+    const mat = new T.MeshBasicMaterial({
+      transparent: true, alphaTest: 0.05, toneMapped: false,
+      clippingPlanes: [new T.Plane(new T.Vector3(0, 1, 0), 0)],   // nothing of him shows below the floor
+    });
+    const mesh = new T.Mesh(new T.PlaneGeometry(W, H), mat);
+    mesh.visible = false;
+    scene.add(mesh);
+    renderer.localClippingEnabled = true;
+
+    let on = false, ready = false, looking = false, peek = null, nextAt = 0, timer = 0;
+    const img = new Image();
+    img.onload = () => {
+      const c = document.createElement('canvas');
+      c.width = 400; c.height = 520;
+      c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+      const tex = new T.CanvasTexture(c);
+      tex.colorSpace = T.SRGBColorSpace;
+      mat.map = tex;
+      mat.needsUpdate = true;
+      ready = true;
+      requestRender();
+    };
+
+    const v = new T.Vector3();
+    // Finds a spot from the frame just drawn (with him hidden): x, and how high to rise.
+    // He comes up until the drawing down to `showTo` (a y in the drawing) clears the car.
+    // Returns null if no spot fits right now.
+    function plan(showTo) {
+      const show = H * (showTo - 90) / 260 + 0.04;          // how far his eyes rise above the car, meters
+      const gl = renderer.getContext();
+      const w = gl.drawingBufferWidth, h = gl.drawingBufferHeight;
+      if (!w || !h) return null;
+      const px = new Uint8Array(w * h * 4);
+      gl.readPixels(0, 0, w, h, gl.RGBA, gl.UNSIGNED_BYTE, px);
+      const solid = (x, row) => px[((h - 1 - row) * w + x) * 4 + 3] > 250;   // rows count down from the top
+
+      // The car's outline in every third column: its top row, and how far down it stays solid
+      // (-1 where there's no car). Small gaps, like under the side mirror, don't count as open.
+      const STEP = 3, cols = Math.floor(w / STEP), GAP = Math.max(3, Math.round(h * 0.025));
+      const top = new Int32Array(cols).fill(-1), bottom = new Int32Array(cols).fill(-1);
+      for (let c = 0; c < cols; c++) {
+        const x = c * STEP;
+        let r = 0;
+        while (r < h && !solid(x, r)) r++;
+        if (r === h) continue;
+        let b = r;
+        for (let y = r + 1, gap = 0; y < h; y++) {
+          if (solid(x, y)) { b = y; gap = 0; } else if (++gap > GAP) break;
+        }
+        top[c] = r; bottom[c] = b;
+      }
+
+      // His size on screen at his depth.
+      const toScreen = (x, y) => { v.set(x, y, Z).project(camera); return [(v.x + 1) / 2 * w, (1 - v.y) / 2 * h]; };
+      const [sx0, sy0] = toScreen(0, 1), [sx1] = toScreen(1, 1), [, sy2] = toScreen(0, 2);
+      const perX = sx1 - sx0, perY = sy0 - sy2;              // pixels per meter, across and up
+      const headCols = Math.ceil(HEAD * perX / STEP), eyeCols = Math.ceil(EYE_SPAN * perX / STEP);
+
+      const spots = [];
+      for (let c = headCols; c < cols - headCols; c += 2) {
+        const feet = toScreen((c * STEP - sx0) / perX, 0)[1];   // where the floor under him is on screen
+        let line = Infinity, low = -Infinity, ok = true;
+        for (let k = c - headCols; k <= c + headCols; k++) {
+          // The car must cover him all the way down to his feet in every column of his head.
+          if (top[k] < 0 || top[k] > feet - 8 || bottom[k] < feet + 2) { ok = false; break; }
+          if (Math.abs(k - c) <= eyeCols) line = Math.min(line, top[k]);
+          low = Math.max(low, top[k]);
+        }
+        if (!ok) continue;
+        const eyeRow = line - show * perY;
+        if (eyeRow - (HAT - EYES) * perY < h * 0.02) continue;    // his hat would stick out of the picture
+        spots.push({ x: c * STEP, eyeRow, low });
+      }
+      if (!spots.length) return null;
+
+      const spot = spots[Math.floor(Math.random() * spots.length)];
+      const toPlane = (sx, sy) => {                          // screen pixel -> point on his plane
+        v.set(sx / w * 2 - 1, 1 - sy / h * 2, 0.5).unproject(camera);
+        const c = camera.position, t = (Z - c.z) / (v.z - c.z);
+        return [c.x + (v.x - c.x) * t, c.y + (v.y - c.y) * t];
+      };
+      const [x, eyesY] = toPlane(spot.x, spot.eyeRow);
+      const lowY = toPlane(spot.x, spot.low)[1];
+      // Up: eyes over the car. Down: even his hat is below the lowest edge of the car in front of him.
+      return { x, up: eyesY - EYES, down: Math.min(lowY - 0.15 - HAT, eyesY - EYES - 0.3) };
+    }
+
+    function waitFor(ms) {
+      nextAt = performance.now() + ms;
+      clearTimeout(timer);
+      timer = setTimeout(requestRender, ms + 20);
+    }
+    function set(value) {
+      on = value;
+      if (on && !img.src) img.src = 'assets/freddy.svg';   // only fetched once haunted mode starts
+      clearTimeout(timer);
+      looking = false;
+      peek = null;
+      mesh.visible = false;
+      if (on) waitFor(1500);
+      requestRender();
+    }
+    // Before drawing: moves him. Returns true while he needs more frames.
+    function step(now) {
+      if (!on || !ready) return false;
+      if (!peek) {
+        if (now < nextAt) return false;
+        if (autoRun) { waitFor(1000); return false; }      // not while the car is spinning
+        looking = true;                                    // pick a spot from the next frame
+        return true;
+      }
+      const t = now - peek.t0;
+      let k;
+      if (t < RISE) k = reduceMotion ? 1 : 1 - (1 - t / RISE) ** 3;
+      else if (t < RISE + HOLD) k = 1;
+      else if (t < RISE + HOLD + SINK) k = reduceMotion ? 1 : 1 - ((t - RISE - HOLD) / SINK) ** 2;
+      else { peek = null; mesh.visible = false; waitFor(2500 + Math.random() * 4000); return true; }
+      mesh.position.set(peek.x, peek.down + (peek.up - peek.down) * k, Z);
+      mesh.rotation.z = reduceMotion ? 0 : Math.sin(t / 420) * 0.07 * k;   // a slow, creepy head tilt
+      return true;
+    }
+    // After drawing: if he was looking for a spot, read this frame and start the peek.
+    function afterRender(now) {
+      if (!looking) return false;
+      looking = false;
+      // Usually just his eyes (the bottom of the eyes is y 104 in the drawing); sometimes his nose too (y 131).
+      const spot = (Math.random() < 0.35 && plan(131)) || plan(104);
+      if (!spot) { waitFor(1500); return false; }
+      peek = { t0: now, ...spot };
+      mesh.position.set(spot.x, spot.down, Z);
+      mesh.rotation.z = 0;
+      mesh.visible = true;
+      return true;
+    }
+    return { set, step, afterRender };
+  })();
+
   /* ---------- Drawing: only when something changed ---------- */
   let queued = false;
   function requestRender() {
@@ -968,7 +1116,9 @@ function start(T) {
     for (const m of muddable) {
       if (m.dirty) { m.ctx.putImageData(m.img, 0, 0); m.tex.needsUpdate = true; m.dirty = false; }
     }
+    if (freddy.step(now)) again = true;
     renderer.render(scene, camera);
+    if (freddy.afterRender(now)) again = true;
     if (suds.length) { drawSuds(); again = true; } else if (ui.fx.width) { fctx.setTransform(1, 0, 0, 1, 0, 0); fctx.clearRect(0, 0, ui.fx.width, ui.fx.height); }
     if (again) requestRender();
   }
@@ -1039,4 +1189,9 @@ function start(T) {
   if ('ResizeObserver' in window) new ResizeObserver(resize).observe(ui.stage);
   else window.addEventListener('resize', resize);
   resize();
+
+  // Haunted mode (app.js) says when to let Freddy out.
+  const haunted = () => document.documentElement.classList.contains('is-haunted');
+  document.addEventListener('hauntedchange', () => freddy.set(haunted()));
+  if (haunted()) freddy.set(true);
 }

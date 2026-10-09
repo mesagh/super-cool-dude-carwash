@@ -4,7 +4,7 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@300;800;900&family=Nunito:wght@400;600;700;800&family=Permanent+Marker&display=swap">
 <style>
   /* Layout: the kids' poster, taped to a wall. Their hand-drawn logo opens the page, the poster's
-     price list becomes a menu board, a mud-covered car you can scrub, then a text-to-book form. */
+     price list becomes a menu board, a mud-covered car you can scrub, reviews, then a text-to-book form. */
   :root {
     --bg: #f3f5f0;          /* the wall the poster is taped to */
     --paper: #ffffff;       /* poster board, same in both themes */
@@ -90,6 +90,7 @@
       <a href="#washes">Washes</a>
       <a href="#membership">Membership</a>
       <a href="#scrub">Scrub test</a>
+      <a href="#reviews">Reviews</a>
       <a href="#book">Book</a>
     </nav>
     <a class="btn btn-yellow btn-sm" href="#book">Book a wash</a>
@@ -333,6 +334,7 @@
               </g>
               <path id="star" d="M0-15 4-4 15 0 4 4 0 15-4 4-15 0-4-4Z"/>
             </defs>
+            <image class="freddy-2d" href="assets/freddy.svg" x="186" y="6" width="100" height="130"/>
             <ellipse class="car-shadow" cx="240" cy="233" rx="214" ry="9" filter="url(#soften)"/>
             <ellipse class="underbody" cx="243" cy="215" rx="150" ry="11" filter="url(#soften)"/>
             <ellipse class="tire-contact" cx="118" cy="231.5" rx="30" ry="3.2" filter="url(#glow)"/>
@@ -392,12 +394,56 @@
             <button class="turn-btn" type="button" id="turnRight" aria-label="Turn the car right">↻</button>
           </div>
         </div>
-        <div class="secret-arrows" role="group" aria-label="Secret arrow sequence">
-          <button type="button" data-secret-arrow="ArrowUp" aria-label="Up arrow">↑</button>
-          <button type="button" data-secret-arrow="ArrowDown" aria-label="Down arrow">↓</button>
-          <button type="button" data-secret-arrow="ArrowRight" aria-label="Right arrow">→</button>
-        </div>
       </figure>
+    </div>
+  </section>
+
+  <section class="section section-reviews" id="reviews">
+    <div class="wrap reviews-grid">
+      <div class="reviews-intro">
+        <div class="section-head">
+          <p class="eyebrow">Reviews</p>
+          <h2>What customers say.</h2>
+          <p class="section-sub">Got a wash from us? Tell us how it went, and we'll post your review here.</p>
+        </div>
+        <ol class="review-list" id="reviewList">
+          <!-- Add real reviews here, one <li> each, in the customer's own words:
+          <li class="review">
+            <p class="review-stars" aria-label="5 out of 5 stars">★★★★★</p>
+            <blockquote><p>What they said.</p></blockquote>
+            <p class="review-by">First name · Gold wash</p>
+          </li>
+          -->
+        </ol>
+        <p class="review-empty" id="reviewEmpty">No reviews yet. Yours could be the first!</p>
+      </div>
+
+      <form class="review-form" id="reviewForm" novalidate>
+        <p class="hand-note">Write a review</p>
+        <fieldset class="field">
+          <legend>Stars</legend>
+          <div class="stars" id="reviewStars">
+            <label class="star"><input type="radio" name="stars" value="1" aria-label="1 star"><span aria-hidden="true">★</span></label>
+            <label class="star"><input type="radio" name="stars" value="2" aria-label="2 stars"><span aria-hidden="true">★</span></label>
+            <label class="star"><input type="radio" name="stars" value="3" aria-label="3 stars"><span aria-hidden="true">★</span></label>
+            <label class="star"><input type="radio" name="stars" value="4" aria-label="4 stars"><span aria-hidden="true">★</span></label>
+            <label class="star"><input type="radio" name="stars" value="5" aria-label="5 stars"><span aria-hidden="true">★</span></label>
+          </div>
+        </fieldset>
+        <div class="field">
+          <label for="reviewText">Your review</label>
+          <textarea id="reviewText" name="review" rows="4" placeholder="How clean did your car get?"></textarea>
+        </div>
+        <div class="field">
+          <label for="reviewName">Your first name</label>
+          <input type="text" id="reviewName" name="reviewName" autocomplete="given-name" placeholder="First name">
+        </div>
+        <div class="book-actions">
+          <button class="btn btn-yellow" type="submit" id="reviewCopy">Copy my review</button>
+          <a class="btn btn-ghost" id="reviewSms" href="sms:+16503093989">Open in Messages</a>
+        </div>
+        <p class="review-note" id="reviewNote">Reviews come to us by text at 650-309-3989, and we post them here. On a phone, “Open in Messages” starts the text for you.</p>
+      </form>
     </div>
   </section>
 

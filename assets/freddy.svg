@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="200" height="260" viewBox="0 0 200 260">
+  <!-- An animatronic bear in Freddy's style for the haunted carwash: brown fur, top hat, bow tie, blue eyes. -->
+  <defs>
+    <linearGradient id="fur" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#8d5a30"/>
+      <stop offset="1" stop-color="#5f3a1c"/>
+    </linearGradient>
+  </defs>
+  <g stroke="#2b170a" stroke-width="3" stroke-linejoin="round">
+    <path d="M26 260C26 196 52 150 100 150C148 150 174 196 174 260Z" fill="url(#fur)"/>
+    <path d="M62 260C62 226 80 206 100 206C120 206 138 226 138 260Z" fill="#c38c55" stroke="none"/>
+    <circle cx="46" cy="62" r="21" fill="#7a4a25"/>
+    <circle cx="154" cy="62" r="21" fill="#7a4a25"/>
+    <circle cx="46" cy="62" r="10" fill="#4a2a12" stroke="none"/>
+    <circle cx="154" cy="62" r="10" fill="#4a2a12" stroke="none"/>
+    <path d="M100 52C140 52 166 76 166 112C166 146 138 170 100 170C62 170 34 146 34 112C34 76 60 52 100 52Z" fill="url(#fur)"/>
+    <ellipse cx="100" cy="136" rx="44" ry="30" fill="#c99560" stroke-width="2.5"/>
+  </g>
+  <!-- Mouth full of teeth -->
+  <path d="M68 146Q100 156 132 146L130 156Q100 168 70 156Z" fill="#2a1208"/>
+  <g fill="#efe6cf">
+    <rect x="74" y="147.5" width="6.5" height="6" rx="1.2"/>
+    <rect x="82" y="148.9" width="6.5" height="6" rx="1.2"/>
+    <rect x="90" y="149.8" width="6.5" height="6" rx="1.2"/>
+    <rect x="98" y="150" width="6.5" height="6" rx="1.2"/>
+    <rect x="106" y="149.6" width="6.5" height="6" rx="1.2"/>
+    <rect x="114" y="148.5" width="6.5" height="6" rx="1.2"/>
+    <rect x="122" y="146.9" width="6.5" height="6" rx="1.2"/>
+    <rect x="78" y="154.6" width="6" height="5" rx="1.2"/>
+    <rect x="86" y="156.2" width="6" height="5" rx="1.2"/>
+    <rect x="94" y="156.9" width="6" height="5" rx="1.2"/>
+    <rect x="102" y="156.8" width="6" height="5" rx="1.2"/>
+    <rect x="110" y="155.9" width="6" height="5" rx="1.2"/>
+    <rect x="118" y="154.1" width="6" height="5" rx="1.2"/>
+  </g>
+  <path d="M100 130V147" stroke="#2b170a" stroke-width="2.5" stroke-linecap="round"/>
+  <!-- Nose -->
+  <path d="M86 118Q100 110 114 118Q112 128 100 130Q88 128 86 118Z" fill="#1c0f06"/>
+  <ellipse cx="95" cy="117" rx="4" ry="2" fill="#fff" opacity=".45"/>
+  <!-- Eyes: blue, glowing a little, under heavy lids -->
+  <g stroke="#2b170a" stroke-width="2.5">
+    <ellipse cx="74" cy="90" rx="15" ry="14" fill="#f2eee3"/>
+    <ellipse cx="126" cy="90" rx="15" ry="14" fill="#f2eee3"/>
+  </g>
+  <circle cx="75" cy="93" r="11" fill="#5fb6ff" opacity=".35"/>
+  <circle cx="125" cy="93" r="11" fill="#5fb6ff" opacity=".35"/>
+  <circle cx="75" cy="93" r="8" fill="#2f8fe6"/>
+  <circle cx="125" cy="93" r="8" fill="#2f8fe6"/>
+  <circle cx="75" cy="93" r="3.6" fill="#08090b"/>
+  <circle cx="125" cy="93" r="3.6" fill="#08090b"/>
+  <circle cx="77.5" cy="90.5" r="2" fill="#fff"/>
+  <circle cx="127.5" cy="90.5" r="2" fill="#fff"/>
+  <g fill="#24150b" stroke="#2b170a" stroke-width="2.5" stroke-linejoin="round">
+    <path d="M59.99 85A15 14 0 0 1 88.65 87Z"/>
+    <path d="M111.35 87A15 14 0 0 1 140.01 85Z"/>
+  </g>
+  <!-- Eyebrows -->
+  <path d="M57 73Q72 64 90 75M143 73Q128 64 110 75" fill="none" stroke="#120b06" stroke-width="7" stroke-linecap="round"/>
+  <!-- Top hat -->
+  <g stroke="#000" stroke-width="2">
+    <path d="M84 53V22Q100 18 116 22V53Z" fill="#141414"/>
+    <ellipse cx="100" cy="53" rx="25" ry="5.5" fill="#141414"/>
+    <ellipse cx="100" cy="21" rx="16" ry="3.5" fill="#2c2c2c"/>
+  </g>
+  <path d="M84.5 40H115.5V46H84.5Z" fill="#3b3b3b"/>
+  <!-- Bow tie -->
+  <g fill="#101010" stroke="#000" stroke-width="2" stroke-linejoin="round">
+    <path d="M100 180L78 168V192Z"/>
+    <path d="M100 180L122 168V192Z"/>
+    <rect x="93" y="173" width="14" height="14" rx="3"/>
+  </g>
+</svg>
