@@ -1,21 +1,3 @@
-// Show the weekday closure notice using Pacific time, including daylight saving time.
-(() => {
-  const notice = document.getElementById('weekdayNotice');
-  if (!notice) return;
-  const weekday = new Intl.DateTimeFormat('en-US', {
-    timeZone: 'America/Los_Angeles', weekday: 'short'
-  });
-  function updateNotice() {
-    const day = weekday.format(new Date());
-    notice.hidden = day === 'Sat' || day === 'Sun';
-  }
-  updateNotice();
-  // Update at day changes even when someone leaves the website open.
-  setInterval(updateNotice, 60000);
-  window.addEventListener('pageshow', updateNotice);
-  document.addEventListener('visibilitychange', updateNotice);
-})();
-
 // Secret haunted-carwash mode: Up, Down, Right, then code 987.
 (() => {
   const sequence = ['ArrowUp', 'ArrowDown', 'ArrowRight'];
