@@ -942,15 +942,16 @@ function start(T) {
     fctx.globalAlpha = 1;
   }
 
-  /* ---------- Haunted mode: Freddy peeks out from behind the car ---------- */
-  // A flat cutout standing behind the car (the drawing is 200 x 260, assets/freddy.svg). Before each
+  /* ---------- Haunted mode: The entity peeks out from behind the car ---------- */
+  // A flat cutout standing behind the car (the portrait uses a 200 x 260 coordinate system, assets/entity.png). Before each
   // peek he looks at the frame just drawn and picks a spot where the car hides him up to the eyes
-  // and there's room above it for his head and hat, so it works however the car is turned.
-  const freddy = (() => {
+  // and there's room above it for his head and hood, so it works however the car is turned.
+  const entity = (() => {
     const W = 1.8, H = W * 260 / 200;
     const Z = -2.7;                                // behind the car's far side at every angle
     const above = (y) => H * (0.5 - y / 260);      // how far a point of the drawing sits above the cutout's middle
-    const EYES = above(90), HAT = above(16);
+    const EYE_Y = 81;
+    const EYES = above(EYE_Y), TOP = above(0);
     const HEAD = 0.375 * W, EYE_SPAN = 0.21 * W;   // half-widths: ear to ear, and across both eyes
     const RISE = 1300, HOLD = 1900, SINK = 650;
     const mat = new T.MeshBasicMaterial({
@@ -966,7 +967,7 @@ function start(T) {
     const img = new Image();
     img.onload = () => {
       const c = document.createElement('canvas');
-      c.width = 400; c.height = 520;
+      c.width = 600; c.height = 780;
       c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
       const tex = new T.CanvasTexture(c);
       tex.colorSpace = T.SRGBColorSpace;
@@ -981,7 +982,7 @@ function start(T) {
     // He comes up until the drawing down to `showTo` (a y in the drawing) clears the car.
     // Returns null if no spot fits right now.
     function plan(showTo) {
-      const show = H * (showTo - 90) / 260 + 0.04;          // how far his eyes rise above the car, meters
+      const show = H * (showTo - EYE_Y) / 260 + 0.04;          // how far his eyes rise above the car, meters
       const gl = renderer.getContext();
       const w = gl.drawingBufferWidth, h = gl.drawingBufferHeight;
       if (!w || !h) return null;
@@ -1023,7 +1024,7 @@ function start(T) {
         }
         if (!ok) continue;
         const eyeRow = line - show * perY;
-        if (eyeRow - (HAT - EYES) * perY < h * 0.02) continue;    // his hat would stick out of the picture
+        if (eyeRow - (TOP - EYES) * perY < h * 0.02) continue;    // its hood would stick out of the picture
         spots.push({ x: c * STEP, eyeRow, low });
       }
       if (!spots.length) return null;
@@ -1036,8 +1037,8 @@ function start(T) {
       };
       const [x, eyesY] = toPlane(spot.x, spot.eyeRow);
       const lowY = toPlane(spot.x, spot.low)[1];
-      // Up: eyes over the car. Down: even his hat is below the lowest edge of the car in front of him.
-      return { x, up: eyesY - EYES, down: Math.min(lowY - 0.15 - HAT, eyesY - EYES - 0.3) };
+      // Up: eyes over the car. Down: even its hood is below the lowest edge of the car in front of him.
+      return { x, up: eyesY - EYES, down: Math.min(lowY - 0.15 - TOP, eyesY - EYES - 0.3) };
     }
 
     function waitFor(ms) {
@@ -1047,7 +1048,7 @@ function start(T) {
     }
     function set(value) {
       on = value;
-      if (on && !img.src) img.src = 'assets/freddy.svg';   // only fetched once haunted mode starts
+      if (on && !img.src) img.src = 'assets/entity.png';   // only fetched once haunted mode starts
       clearTimeout(timer);
       looking = false;
       peek = null;
@@ -1116,9 +1117,9 @@ function start(T) {
     for (const m of muddable) {
       if (m.dirty) { m.ctx.putImageData(m.img, 0, 0); m.tex.needsUpdate = true; m.dirty = false; }
     }
-    if (freddy.step(now)) again = true;
+    if (entity.step(now)) again = true;
     renderer.render(scene, camera);
-    if (freddy.afterRender(now)) again = true;
+    if (entity.afterRender(now)) again = true;
     if (suds.length) { drawSuds(); again = true; } else if (ui.fx.width) { fctx.setTransform(1, 0, 0, 1, 0, 0); fctx.clearRect(0, 0, ui.fx.width, ui.fx.height); }
     if (again) requestRender();
   }
@@ -1190,8 +1191,8 @@ function start(T) {
   else window.addEventListener('resize', resize);
   resize();
 
-  // Haunted mode (app.js) says when to let Freddy out.
+  // Haunted mode (app.js) says when to let The entity out.
   const haunted = () => document.documentElement.classList.contains('is-haunted');
-  document.addEventListener('hauntedchange', () => freddy.set(haunted()));
-  if (haunted()) freddy.set(true);
+  document.addEventListener('hauntedchange', () => entity.set(haunted()));
+  if (haunted()) entity.set(true);
 }

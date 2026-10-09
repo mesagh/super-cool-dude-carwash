@@ -15,7 +15,7 @@
     'Someone is hiding behind the car.'
   ];
 
-  // Freddy peeks out from behind the scrub-test car while this is on (scrub3d.js, or CSS for the flat car).
+  // The entity peeks out from behind the scrub-test car while this is on (scrub3d.js, or CSS for the flat car).
   function setHaunted(on) {
     document.documentElement.classList.toggle('is-haunted', on);
     document.dispatchEvent(new Event('hauntedchange'));

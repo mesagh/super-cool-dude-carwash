@@ -715,15 +715,15 @@ h2 {
 @media (max-width: 600px) { .haunted-popup { padding: 14px 16px 16px; } }
 @keyframes spook-pop { from { opacity: 0; transform: scale(.6); } }
 @keyframes spook-fog { to { translate: 8% 0; } }
-/* Freddy behind the flat 2D car: he rises over the roof now and then. (The 3D car does its own.) */
-.freddy-2d { display: none; }
-.is-haunted .freddy-2d { display: inline; transform: translateY(60px); animation: freddy-peek 7s ease-in-out 1s infinite; }
-@keyframes freddy-peek {
+/* The entity behind the flat 2D car: he rises over the roof now and then. (The 3D car does its own.) */
+.entity-2d { display: none; }
+.is-haunted .entity-2d { display: inline; transform: translateY(60px); animation: entity-peek 7s ease-in-out 1s infinite; }
+@keyframes entity-peek {
   0%, 30% { transform: translateY(60px); }
   44%, 72% { transform: translateY(0); }
   84%, 100% { transform: translateY(60px); }
 }
-@media (prefers-reduced-motion: reduce) { .is-haunted .freddy-2d { transform: none; } }
+@media (prefers-reduced-motion: reduce) { .is-haunted .entity-2d { transform: none; } }
 
 /* Footer */
 .footer { padding-block: 2.75rem 3.25rem; background: var(--bg); border-top: 3px solid var(--ink); }
