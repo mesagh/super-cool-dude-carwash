@@ -278,6 +278,14 @@ h2 {
 
 .extras { display: grid; gap: .7rem; justify-items: start; margin-top: clamp(2rem, 4vw, 2.75rem); }
 .extras .hand-note { margin-left: .3rem; }
+.extras { grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: stretch; }
+.extras .hand-note { grid-column: 1 / -1; }
+.extras .extra { width: 100%; }
+.juice-image { width: 90px; height: 90px; object-fit: contain; flex: none; border-radius: 8px; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .extra-juice .extra-copy { --juice-color: #ffab54; } }
+:root[data-theme="dark"] .extra-juice .extra-copy { --juice-color: #ffab54; }
+.extra-juice .extra-copy h3, .extra-juice .extra-copy p { color: var(--juice-color, #a84300); }
+@media (max-width: 650px) { .extras { grid-template-columns: 1fr; } }
 .extra {
   display: flex;
   align-items: center;
