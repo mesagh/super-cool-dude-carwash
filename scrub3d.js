@@ -1,13 +1,10 @@
 // The scrub test as a real 3D car, drawn with three.js.
-// The car is modeled from the same side profile as the 2D drawing. Mud lives in textures on the
-// car's surface, so it turns with the car. If the browser can't draw 3D, the 2D car in app.js takes over.
-window.scrub3dStarted = true;
+// Mud lives in textures on the car's surface, so it turns with the car.
 
 const ui = {
   section: document.getElementById('scrub'),
   stage: document.getElementById('bayStage'),
-  svgCar: document.querySelector('#bayStage svg.car'),
-  mud2d: document.getElementById('mud'),
+  status: document.getElementById('bayStatus'),
   fx: document.getElementById('fx'),
   tip: document.getElementById('bayTip'),
   hint: document.getElementById('bayHint'),
@@ -22,10 +19,16 @@ const ui = {
   turnRight: document.getElementById('turnRight'),
 };
 
-function useFlatCar(reason) {
-  console.warn('Showing the 2D car instead:', reason);
-  window.scrub3dStarted = false;
-  if (window.startScrub2D) window.startScrub2D();
+function showCarUnavailable(reason) {
+  console.warn('3D car unavailable:', reason);
+  ui.stage.querySelector('.car3d')?.remove();
+  ui.status.hidden = false;
+  ui.status.textContent = 'The interactive car is unavailable on this browser. You can still view prices and book a wash below.';
+  ui.tip.hidden = true;
+  ui.turnBox.hidden = true;
+  ui.autoBtn.disabled = true;
+  ui.muddyBtn.hidden = true;
+  ui.meter.hidden = true;
 }
 
 let THREE = null;
@@ -34,13 +37,13 @@ try {
   if (!(probe.getContext('webgl2') || probe.getContext('webgl'))) throw new Error('this browser cannot draw 3D');
   THREE = await import('./vendor/three.module.min.js');
 } catch (err) {
-  useFlatCar(err.message || err);
+  showCarUnavailable(err.message || err);
 }
 if (THREE) {
   try {
     start(THREE);
   } catch (err) {
-    useFlatCar(err.message || err);
+    showCarUnavailable(err.message || err);
   }
 }
 
@@ -86,8 +89,9 @@ function start(T) {
     };
     return { top: (sx) => at(tS, sx), bot: (sx) => at(bS, sx) };
   }
-  const bodyEdge = edges(ui.stage.querySelector('.car-paint-body').getAttribute('d'));
-  const cabinEdge = edges(ui.stage.querySelector('.car-paint-cabin').getAttribute('d'));
+  // Profiles are modeling data for the 3D loft, not a rendered fallback car.
+  const bodyEdge = edges('M40 124Q76 116 112 118L338 118Q392 122 446 134Q462 140 461 160L459 180Q457 194 440 196L406 196A38 38 0 1 0 330 196L156 196A38 38 0 1 0 80 196L44 196Q28 194 26 180L24 150Q24 128 40 124Z');
+  const cabinEdge = edges('M108 120L168 74Q178 64 196 62Q236 57 276 62Q290 64 300 72L352 120Z');
 
   // Each part is a loft of cross-sections along the car. A body section has a tucked-in rocker,
   // a wide shoulder, a crisp edge where the side meets the hood or trunk, and a slightly crowned top.
@@ -1159,10 +1163,11 @@ function start(T) {
     requestRender();
   }
 
-  /* ---------- Swap the flat car for the 3D one ---------- */
+  /* ---------- Show the 3D car ---------- */
   resetMud();
-  ui.svgCar.setAttribute('hidden', '');
-  ui.mud2d.hidden = true;
+  ui.status.hidden = true;
+  ui.tip.hidden = false;
+  ui.autoBtn.disabled = false;
   ui.stage.insertBefore(canvas, ui.fx);
   ui.turnBox.hidden = false;
   ui.hint.textContent = 'Rub over each spot three times to wash off the mud. It gets lighter every time. Use the arrows to turn the car and wash every side.';

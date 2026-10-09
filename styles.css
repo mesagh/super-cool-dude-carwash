@@ -357,15 +357,14 @@ h2 {
   border-radius: 18px;
   box-shadow: 7px 7px 0 var(--yellow);
 }
+.bay-status { position: absolute; inset: 0; display: grid; place-content: center; padding: 1.5rem; margin: 0; text-align: center; color: var(--muted); }
 .bay-stage { position: relative; width: 100%; max-width: 100%; aspect-ratio: 480 / 250; }
-.car, .mud, .fx { position: absolute; inset: 0; width: 100%; height: 100%; }
-.car { overflow: visible; }
-.mud, .car3d {
+.fx { position: absolute; inset: 0; width: 100%; height: 100%; }
+.car3d {
   touch-action: none;
   cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='32' viewBox='0 0 40 32'%3E%3Crect x='2' y='4' width='36' height='24' rx='7' fill='%23f5c814' stroke='%2317221b' stroke-width='2.5'/%3E%3Ccircle cx='12' cy='13' r='2.2' fill='%23c9a20c'/%3E%3Ccircle cx='24' cy='19' r='2.6' fill='%23c9a20c'/%3E%3Ccircle cx='30' cy='11' r='1.8' fill='%23c9a20c'/%3E%3C/svg%3E") 20 16, pointer;
   transition: opacity .7s ease;
 }
-.mud.is-clean { opacity: 0; }
 .fx { pointer-events: none; }
 .car3d { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
 .bay-turn { position: absolute; right: 2%; bottom: 3%; display: flex; gap: .45rem; }
@@ -405,87 +404,6 @@ h2 {
 }
 .bay-tip.is-gone { opacity: 0; animation: none; }
 @keyframes bob { 50% { translate: 0 -5px; } }
-
-.paint-hi { stop-color: color-mix(in srgb, var(--yellow) 50%, #ffffff); }
-.paint-base { stop-color: var(--yellow); }
-.paint-light { stop-color: color-mix(in srgb, var(--yellow) 80%, #ffffff); }
-.paint-mid { stop-color: color-mix(in srgb, var(--yellow) 86%, #6b4a00); }
-.paint-low { stop-color: color-mix(in srgb, var(--yellow) 70%, #6b4a00); }
-.paint-deep { stop-color: color-mix(in srgb, var(--yellow) 52%, #3d2a00); }
-.shade-strong { stop-color: rgb(var(--shadow)); stop-opacity: .26; }
-.shade-none { stop-color: rgb(var(--shadow)); stop-opacity: 0; }
-.glass-top { stop-color: var(--glass-top); }
-.glass-mid { stop-color: var(--glass-mid); }
-.glass-dark { stop-color: var(--glass-dark); }
-.glass-deep { stop-color: var(--glass-deep); }
-.trim-light { stop-color: var(--trim-light); }
-.trim-dark { stop-color: var(--trim-dark); }
-.trim-deep { stop-color: var(--trim-deep); }
-.lamp-hi { stop-color: var(--lamp-hi); }
-.lamp-mid { stop-color: var(--lamp-mid); }
-.lamp-edge { stop-color: var(--lamp-edge); }
-.tail-hi { stop-color: var(--tail-hi); }
-.tail-mid { stop-color: var(--tail-mid); }
-.tail-deep { stop-color: var(--tail-deep); }
-.tire-side { stop-color: var(--tire-wall); }
-.tire-lo { stop-color: var(--tire); }
-.tire-edge { stop-color: var(--trim-deep); }
-.disc { stop-color: var(--disc); }
-.disc-dark { stop-color: var(--disc-dark); }
-.rim-hi { stop-color: var(--rim-hi); }
-.rim-low { stop-color: var(--rim-low); }
-.rim-deep { stop-color: var(--rim-deep); }
-
-/* The car: no outlines; shape comes from light and shadow */
-.car-shadow { fill: rgb(var(--shadow) / .36); }
-.underbody { fill: rgb(var(--shadow) / .45); }
-.tire-contact { fill: rgb(var(--shadow) / .55); }
-.car-paint-cabin { fill: url(#paintCabin); }
-.car-paint-body { fill: url(#paintBody); }
-.car-ends { fill: url(#bodyEnds); }
-.cladding { fill: url(#cladding); }
-.sill-light { fill: none; stroke: var(--paper); stroke-width: 1; stroke-linecap: round; opacity: .3; }
-.car-glass { fill: url(#glass); stroke: var(--chrome); stroke-width: 1.6; stroke-linejoin: round; }
-.glass-depth .glass-shade { fill: rgb(var(--shadow) / .2); }
-.glass-glint path { fill: none; stroke: var(--paper); stroke-linecap: round; opacity: .22; }
-.glass-glint .glint-wide { stroke-width: 10; }
-.glass-glint .glint-thin { stroke-width: 3; }
-.car-pillar { fill: url(#pillar); }
-.roof-shine { fill: none; stroke: var(--paper); stroke-width: 3.5; stroke-linecap: round; opacity: .5; }
-.car-shine { fill: none; stroke: var(--paper); stroke-width: 4; stroke-linecap: round; opacity: .4; }
-.car-crease { fill: none; stroke: rgb(var(--shadow) / .22); stroke-width: 1.2; }
-.car-seam { fill: none; stroke: rgb(var(--shadow) / .55); stroke-width: 1.3; stroke-linecap: round; }
-.car-seam-light { fill: none; stroke: var(--paper); stroke-width: 1; stroke-linecap: round; opacity: .4; }
-.handle-recess { fill: none; stroke: rgb(var(--shadow) / .4); stroke-width: 4.5; stroke-linecap: round; }
-.car-handle { fill: none; stroke: var(--chrome); stroke-width: 3.5; stroke-linecap: round; }
-.mirror-shadow { fill: rgb(var(--shadow) / .28); }
-.car-mirror { fill: url(#paintCabin); }
-.car-light { fill: url(#lamp); stroke: var(--trim-dark); stroke-width: 1; }
-.lamp-projector { fill: var(--lamp-hi); stroke: var(--rim-low); stroke-width: 1.2; }
-.lamp-drl { fill: none; stroke: var(--paper); stroke-width: 1.8; stroke-linecap: round; opacity: .9; }
-.car-tail { fill: url(#tail); stroke: var(--trim-dark); stroke-width: 1; }
-.tail-shine { fill: none; stroke: var(--paper); stroke-width: 1.2; stroke-linecap: round; opacity: .55; }
-.car-arch { fill: url(#well); }
-.arch-lip { fill: none; stroke: var(--paper); stroke-width: 1.6; stroke-linecap: round; opacity: .4; }
-.car-tire { fill: var(--trim-deep); }
-.tire { fill: url(#tireGrad); }
-.tire-shine { fill: none; stroke: var(--paper); stroke-width: 2.5; stroke-linecap: round; opacity: .12; }
-.rim-well { fill: var(--trim-deep); }
-.brake-disc { fill: url(#disc); }
-.caliper { fill: var(--trim-dark); }
-.spokes-shadow path { fill: var(--trim-deep); opacity: .6; }
-.spokes path { fill: url(#spoke); }
-.rim-ring { fill: none; stroke: url(#rimRing); stroke-width: 2.6; }
-.hub { fill: url(#hubGrad); }
-.hub-glint { fill: var(--paper); opacity: .85; }
-.rim-lip { fill: none; stroke: var(--paper); stroke-width: 1.2; stroke-linecap: round; opacity: .75; }
-.sparkles use { fill: var(--paper); stroke: var(--paper-ink); stroke-width: 2.5; stroke-linejoin: round; opacity: 0; }
-.is-clean .sparkles use { animation: twinkle 1.8s ease-in-out infinite; }
-.is-clean .sparkles use:nth-child(2) { animation-delay: .3s; }
-.is-clean .sparkles use:nth-child(3) { animation-delay: .6s; }
-.is-clean .sparkles use:nth-child(4) { animation-delay: .9s; }
-.is-clean .sparkles use:nth-child(5) { animation-delay: 1.2s; }
-@keyframes twinkle { 0%, 100% { opacity: .15; } 50% { opacity: 1; } }
 
 /* Booking: dark band */
 .section-night { color: var(--night-ink); background: var(--night); }
@@ -717,16 +635,6 @@ h2 {
 @media (max-width: 600px) { .haunted-popup { padding: 14px 16px 16px; } }
 @keyframes spook-pop { from { opacity: 0; transform: scale(.6); } }
 @keyframes spook-fog { to { translate: 8% 0; } }
-/* The entity behind the flat 2D car: he rises over the roof now and then. (The 3D car does its own.) */
-.entity-2d { display: none; }
-.is-haunted .entity-2d { display: inline; transform: translateY(60px); animation: entity-peek 7s ease-in-out 1s infinite; }
-@keyframes entity-peek {
-  0%, 30% { transform: translateY(60px); }
-  44%, 72% { transform: translateY(0); }
-  84%, 100% { transform: translateY(60px); }
-}
-@media (prefers-reduced-motion: reduce) { .is-haunted .entity-2d { transform: none; } }
-
 /* Footer */
 .footer { padding-block: 2.75rem 3.25rem; background: var(--bg); border-top: 3px solid var(--ink); }
 .footer-grid { display: grid; gap: 1.25rem; }
@@ -741,5 +649,4 @@ h2 {
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   *, *::before, *::after { animation: none !important; transition: none !important; }
-  .is-clean .sparkles use { opacity: 1; }
 }
